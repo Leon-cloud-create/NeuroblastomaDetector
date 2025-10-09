@@ -7,9 +7,8 @@ import io
 import os
 from datetime import datetime
 
-# --------- Configuration & CSS ----------
+# ---------------- Config & CSS ----------------
 st.set_page_config(page_title="🏥 Neuroblastoma Risk Predictor", layout="wide")
-
 st.markdown(
     """
     <style>
@@ -29,16 +28,15 @@ st.markdown(
     .footer { text-align:center; color:gray; padding:10px 0; margin-top:18px; }
     .small-muted { color:#6b7280; font-size:13px; }
     </style>
-    """,
-    unsafe_allow_html=True
+    """, unsafe_allow_html=True
 )
 
-# --------- Files & paths ----------
+# ---------------- Files & constants ----------------
 PATIENTS_CSV = "patients.csv"
 MODEL_PATH = "model.pkl"
 SCALER_PATH = "scaler.pkl"
 
-# --------- Translations (English filled; minimal placeholders for es/fr) ----------
+# ---------------- Translations ----------------
 translations = {
     "en": {
         "title": "🏥 Neuroblastoma Risk Predictor",
@@ -53,7 +51,7 @@ translations = {
         "risk_high": "High Risk",
         "suggestions_low": "- Continue routine monitoring and regular pediatric visits.\n- If symptoms change or worsen, seek medical advice.",
         "suggestions_moderate": "- Arrange prompt clinical evaluation with a pediatrician.\n- Consider imaging or referral to a specialist if recommended.",
-        "suggestions_high": "- Seek immediate medical attention; contact a pediatric specialist or emergency services.\n- Bring a full symptom timeline and request appropriate diagnostic tests (imaging, labs, biopsy).",
+        "suggestions_high": "- Seek immediate medical attention; contact a pediatric specialist or emergency services.\n- Possible diagnostic steps: imaging (MRI/MIBG) and biopsy. Treatments may include chemotherapy, immunotherapy, and investigational approaches (e.g., micro-patch vaccines) as determined by specialists.",
         "store_data": "📦 Do you want your data stored? (will appear in Past Patient Data)",
         "feedback": "🗒️ Feedback",
         "submit_feedback": "Submit Feedback",
@@ -67,13 +65,14 @@ translations = {
         "past_patient_data": "📁 Past Patient Data",
         "download_csv": "📥 Download assessment CSV",
         "download_all_csv": "Download all stored patients (CSV)",
-        "fill_patient_note": "📝 Please fill out patient information first."
+        "fill_patient_note": "📝 Please fill out patient information first.",
+        "reset_results": "🔄 Reset Results"
     },
     "es": {
         "title": "🏥 Evaluador de Riesgo de Neuroblastoma",
-        "disclaimer": "Esta herramienta es solo para fines informativos y educativos. No proporciona diagnóstico médico.",
+        "disclaimer": "Esta herramienta es solo para fines informativos y educativos. No está destinada a proporcionar asesoramiento médico, diagnóstico o tratamiento. Consulte a un profesional de la salud.",
         "nutshell_title": "🧠 Neuroblastoma en pocas palabras",
-        "nutshell_text": "El neuroblastoma es un cáncer infantil raro...",
+        "nutshell_text": "El neuroblastoma es un cáncer infantil poco frecuente que surge de células nerviosas inmaduras del sistema nervioso simpático...",
         "major_symptoms": "🩺 Síntomas principales",
         "additional_symptoms": "➕ Síntomas adicionales",
         "predict_button": "🔍 Predecir Riesgo",
@@ -82,8 +81,8 @@ translations = {
         "risk_high": "Riesgo Alto",
         "suggestions_low": "- Continúe con el monitoreo de rutina y visitas pediátricas.",
         "suggestions_moderate": "- Consulte a un pediatra para evaluación.",
-        "suggestions_high": "- Busque atención médica inmediata.",
-        "store_data": "📦 ¿Desea que se guarden sus datos? (aparecerán en Pacientes Anteriores)",
+        "suggestions_high": "- Busque atención médica inmediata; consulte a un especialista pediátrico.",
+        "store_data": "📦 ¿Desea que se guarden sus datos? (aparecerán en Datos de Pacientes Anteriores)",
         "feedback": "🗒️ Comentarios",
         "submit_feedback": "Enviar Comentarios",
         "name_optional": "Nombre (opcional)",
@@ -96,13 +95,14 @@ translations = {
         "past_patient_data": "📁 Datos de Pacientes Anteriores",
         "download_csv": "📥 Descargar evaluación (CSV)",
         "download_all_csv": "Descargar todos (CSV)",
-        "fill_patient_note": "📝 Por favor complete la información del paciente primero."
+        "fill_patient_note": "📝 Por favor complete la información del paciente primero.",
+        "reset_results": "🔄 Restablecer Resultados"
     },
     "fr": {
         "title": "🏥 Prédicteur de Risque de Neuroblastome",
-        "disclaimer": "Cet outil est à des fins d'information et d'éducation seulement. Il ne remplace pas un avis médical.",
+        "disclaimer": "Cet outil est à des fins d'information et d'éducation uniquement. Il ne remplace pas un avis médical.",
         "nutshell_title": "🧠 Neuroblastome en bref",
-        "nutshell_text": "Le neuroblastome est un cancer pédiatrique rare...",
+        "nutshell_text": "Le neuroblastome est un cancer pédiatrique rare provenant de cellules nerveuses immatures du système nerveux sympathique...",
         "major_symptoms": "🩺 Symptômes principaux",
         "additional_symptoms": "➕ Symptômes supplémentaires",
         "predict_button": "🔍 Prédire le Risque",
@@ -110,9 +110,9 @@ translations = {
         "risk_moderate": "Risque Modéré",
         "risk_high": "Risque Élevé",
         "suggestions_low": "- Surveillance de routine recommandée.",
-        "suggestions_moderate": "- Consulter un pédiatre.",
-        "suggestions_high": "- Consulter d'urgence.",
-        "store_data": "📦 Voulez-vous que vos données soient stockées ?",
+        "suggestions_moderate": "- Consulter un pédiatre pour une évaluation.",
+        "suggestions_high": "- Consulter d'urgence; contacter un spécialiste pédiatrique.",
+        "store_data": "📦 Voulez-vous que vos données soient stockées ? (apparaîtront dans Données Patients)",
         "feedback": "🗒️ Retour",
         "submit_feedback": "Envoyer",
         "name_optional": "Nom (optionnel)",
@@ -125,21 +125,27 @@ translations = {
         "past_patient_data": "📁 Données Patients",
         "download_csv": "📥 Télécharger l'évaluation (CSV)",
         "download_all_csv": "Télécharger tout (CSV)",
-        "fill_patient_note": "📝 Veuillez remplir les informations du patient d'abord."
+        "fill_patient_note": "📝 Veuillez remplir les informations du patient d'abord.",
+        "reset_results": "🔄 Réinitialiser les résultats"
     }
 }
 
-# --------- Load model & scaler ----------
+# ---------------- Load model & scaler ----------------
 @st.cache_resource
 def load_model_and_scaler():
+    # Loads model and scaler and returns (model, scaler, err)
+    if not os.path.exists(MODEL_PATH):
+        return None, None, f"Model file not found: {MODEL_PATH}"
+    if not os.path.exists(SCALER_PATH):
+        return None, None, f"Scaler file not found: {SCALER_PATH}"
     try:
         model = joblib.load(MODEL_PATH)
     except Exception as e:
-        return None, None, f"Error loading model '{MODEL_PATH}': {e}"
+        return None, None, f"Error loading model: {e}"
     try:
         scaler = joblib.load(SCALER_PATH)
     except Exception as e:
-        return None, None, f"Error loading scaler '{SCALER_PATH}': {e}"
+        return None, None, f"Error loading scaler: {e}"
     return model, scaler, None
 
 model, scaler, load_error = load_model_and_scaler()
@@ -147,17 +153,17 @@ if load_error:
     st.error(load_error)
     st.stop()
 
-# --------- Helpers ----------
+# ---------------- Helpers ----------------
 def gender_to_numeric(g):
-    # Use Male=1, Female=0, Other=0 (change if your trained model uses a different encoding)
-    return 1 if str(g).lower().startswith("m") else 0
+    # Encodes gender: Male=1, Female=0, Other=0
+    if isinstance(g, str) and g.lower().startswith("m"):
+        return 1
+    return 0
 
 def save_patient_row(row: dict):
     df_row = pd.DataFrame([row])
-    if os.path.exists(PATIENTS_CSV):
-        df_row.to_csv(PATIENTS_CSV, mode="a", header=False, index=False)
-    else:
-        df_row.to_csv(PATIENTS_CSV, index=False)
+    header = not os.path.exists(PATIENTS_CSV)
+    df_row.to_csv(PATIENTS_CSV, mode="a", header=header, index=False)
 
 def load_patients():
     if os.path.exists(PATIENTS_CSV):
@@ -167,14 +173,20 @@ def load_patients():
             return pd.DataFrame()
     return pd.DataFrame()
 
-# initialize session storage for showing immediate changes
+# ensure session_state keys
 if "patients_df" not in st.session_state:
     st.session_state["patients_df"] = load_patients()
+if "last_result" not in st.session_state:
+    st.session_state["last_result"] = None
+if "feedbacks" not in st.session_state:
+    st.session_state["feedbacks"] = []
 
-# --------- SIDEBAR ----------
+# ---------------- Sidebar ----------------
 with st.sidebar:
     st.markdown("### 🌐 Language")
-    lang = st.selectbox("", options=["en", "es", "fr"], index=0)
+    lang_display = st.selectbox("", options=["English", "Spanish", "French"], index=0)
+    lang_map = {"English": "en", "Spanish": "es", "French": "fr"}
+    lang = lang_map[lang_display]
     t = translations[lang]
 
     st.markdown("---")
@@ -194,45 +206,45 @@ with st.sidebar:
     else:
         st.info("No past patient data yet.")
 
-# --------- MAIN ----------
+# ---------------- Main ----------------
 st.title(t["title"])
 st.markdown(t["disclaimer"])
 st.subheader(t["nutshell_title"])
 st.write(t["nutshell_text"])
 st.markdown("---")
 
-# --------- Symptoms (checkbox lists) ----------
+# ------ Symptoms (checkboxes) ------
 st.subheader(t["major_symptoms"])
 maj_col1, maj_col2 = st.columns(2)
 with maj_col1:
-    s_lump = st.checkbox("Large/Medium lump (usually on abdomen, chest, or neck)")
-    s_abdominal_pain = st.checkbox("Abdominal pain")
-    s_weight_loss = st.checkbox("Unexplained weight loss")
-    s_bone_pain = st.checkbox("Bone Pain (usually followed by swelling, fever, and limping)")
+    s_lump = st.checkbox("Large/Medium lump (usually on abdomen, chest, or neck)", key="s_lump")
+    s_abdominal_pain = st.checkbox("Abdominal pain", key="s_abdominal_pain")
+    s_weight_loss = st.checkbox("Unexplained weight loss", key="s_weight_loss")
+    s_bone_pain = st.checkbox("Bone Pain (usually followed by swelling, fever, and limping)", key="s_bone_pain")
 with maj_col2:
-    s_fatigue = st.checkbox("Fatigue / Weakness")
-    s_bulging_eyes = st.checkbox("Bulging or bruised eyes")
-    s_constipation = st.checkbox("Constipation")
-    s_aches = st.checkbox("Aches/Pain (usually in the leg causing limping)")
+    s_fatigue = st.checkbox("Fatigue / Weakness", key="s_fatigue")
+    s_bulging_eyes = st.checkbox("Bulging or bruised eyes", key="s_bulging_eyes")
+    s_constipation = st.checkbox("Constipation", key="s_constipation")
+    s_aches = st.checkbox("Aches/Pain (usually in the leg causing limping)", key="s_aches")
 
 st.markdown("---")
 st.subheader(t["additional_symptoms"])
 add_col1, add_col2 = st.columns(2)
 with add_col1:
-    s_fever = st.checkbox("Fever")
-    s_cough = st.checkbox("Cough")
+    s_fever = st.checkbox("Fever", key="s_fever")
+    s_cough = st.checkbox("Cough", key="s_cough")
 with add_col2:
-    s_sore = st.checkbox("Sore Throat")
-    s_runny = st.checkbox("Runny / Stuffy nose")
+    s_sore = st.checkbox("Sore Throat", key="s_sore")
+    s_runny = st.checkbox("Runny / Stuffy nose", key="s_runny")
 
 st.markdown("---")
 
-# --------- Predict ----------
+# -------- Predict button --------
 predict_clicked = st.button(t["predict_button"])
 results_placeholder = st.empty()
 
-if predict_clicked:
-    # Build features array in EXACT order required by your model
+def compute_and_store_result():
+    # Build features in exact order:
     features = [
         age,
         gender_to_numeric(gender),
@@ -251,24 +263,14 @@ if predict_clicked:
     ]
     X = np.array([features], dtype=float)
 
-    # Scale and predict
-    try:
-        Xs = scaler.transform(X)
-    except Exception as e:
-        st.error(f"Scaler transform error: {e}")
-        st.stop()
+    # Scale & predict
+    Xs = scaler.transform(X)
+    probs = model.predict_proba(Xs)[0]
+    pred = model.predict(Xs)[0]
 
-    try:
-        probs = model.predict_proba(Xs)[0]
-        pred = model.predict(Xs)[0]
-    except Exception as e:
-        st.error(f"Model prediction error: {e}")
-        st.stop()
-
-    neuro_prob = float(probs[1])  # probability of class 1 = neuroblastoma
+    neuro_prob = float(probs[1])
     confidence = float(np.max(probs))
 
-    # Risk categorization & color/suggestions
     if neuro_prob <= 0.30:
         risk_level = t["risk_low"]
         dot_color = "#2ca02c"
@@ -282,14 +284,63 @@ if predict_clicked:
         dot_color = "#d62728"
         suggestion = t["suggestions_high"]
 
-    # Render results
+    # compile result dict (including all symptoms)
+    result = {
+        "Name": patient_name or "(no name)",
+        "Date": str(assessment_date),
+        "Age": age,
+        "Gender": gender,
+        "Large_Medium_lump": int(s_lump),
+        "Abdominal_pain": int(s_abdominal_pain),
+        "Unexplained_weight_loss": int(s_weight_loss),
+        "Fever": int(s_fever),
+        "Fatigue_Weakness": int(s_fatigue),
+        "Bulging_bruised_eyes": int(s_bulging_eyes),
+        "Constipation": int(s_constipation),
+        "Aches_Pain": int(s_aches),
+        "Bone_Pain": int(s_bone_pain),
+        "Cough": int(s_cough),
+        "Runny_Stuffy_nose": int(s_runny),
+        "Sore_Throat": int(s_sore),
+        "Prediction": int(pred),
+        "Probability_%": round(neuro_prob*100,2),
+        "Confidence_%": round(confidence*100,2),
+        "Risk": risk_level
+    }
+
+    # Save last result to session_state (so it persists)
+    st.session_state["last_result"] = {
+        "result": result,
+        "dot_color": dot_color,
+        "suggestion": suggestion,
+        "neuro_prob": neuro_prob,
+        "confidence": confidence
+    }
+
+# If user clicked predict, compute and store result
+if predict_clicked:
+    try:
+        compute_and_store_result()
+    except Exception as e:
+        st.error(f"Prediction error: {e}")
+        st.stop()
+
+# Render results from session_state if present
+if st.session_state.get("last_result") is not None:
+    r = st.session_state["last_result"]
+    res = r["result"]
+    dot_color = r["dot_color"]
+    suggestion = r["suggestion"]
+    neuro_prob = r["neuro_prob"]
+    confidence = r["confidence"]
+
     with results_placeholder.container():
         st.markdown("### 🔬 Prediction Results")
         c1, c2 = st.columns([3,1])
         with c1:
-            st.markdown(f"<span class='risk-dot' style='background:{dot_color}'></span> **{risk_level}**", unsafe_allow_html=True)
-            st.write(f"**Prediction:** {'Neuroblastoma' if pred == 1 else 'Not Neuroblastoma'}")
-            st.write(f"**Probability:** {neuro_prob*100:.1f}%")
+            st.markdown(f"<span class='risk-dot' style='background:{dot_color}'></span> **{res['Risk']}**", unsafe_allow_html=True)
+            st.write(f"**Prediction:** {'Neuroblastoma' if res['Prediction']==1 else 'Not Neuroblastoma'}")
+            st.write(f"**Probability:** {res['Probability_%']:.1f}%")
             st.markdown("**Suggestions:**")
             st.write(suggestion)
         with c2:
@@ -297,42 +348,33 @@ if predict_clicked:
             st.markdown(f"<div style='font-weight:700; font-size:20px; color:#0b66c3'>{confidence*100:.1f}%</div>", unsafe_allow_html=True)
             st.progress(int(neuro_prob * 100))
 
-        # Download CSV for this single assessment
-        result_df = pd.DataFrame([{
-            "Name": patient_name or "(no name)",
-            "Date": str(assessment_date),
-            "Age": age,
-            "Gender": gender,
-            "Prediction": int(pred),
-            "Probability_%": round(neuro_prob*100,2),
-            "Confidence_%": round(confidence*100,2),
-            "Risk": risk_level
-        }])
-        csv_bytes = result_df.to_csv(index=False).encode()
+        # Download single-assessment CSV
+        single_df = pd.DataFrame([res])
+        csv_bytes = single_df.to_csv(index=False).encode()
         st.download_button(t["download_csv"], data=csv_bytes,
-                           file_name=f"assessment_{(patient_name or 'patient')}_{datetime.now().strftime('%Y%m%d')}.csv",
+                           file_name=f"assessment_{(res['Name'] or 'patient')}_{datetime.now().strftime('%Y%m%d')}.csv",
                            mime="text/csv")
 
-        # Store data option (checkbox)
+        # Store data option (checkbox). If user checks, append to patients.csv and refresh sidebar list
         st.markdown("---")
-        store = st.checkbox(t["store_data"], value=False)
+        store = st.checkbox(t["store_data"], value=False, key="store_now")
         if store:
-            row = {
-                "Name": patient_name or "(no name)",
-                "Date": str(assessment_date),
-                "Age": age,
-                "Gender": gender,
-                "Prediction": int(pred),
-                "Probability_%": round(neuro_prob*100,2),
-                "Confidence_%": round(confidence*100,2),
-                "Risk": risk_level
-            }
             try:
-                save_patient_row(row)
+                save_patient_row(res)
                 st.success("✅ Data stored.")
                 st.session_state["patients_df"] = load_patients()
             except Exception as e:
                 st.error(f"Error saving data: {e}")
+
+        # Reset results button (clears only last_result)
+        st.markdown("---")
+        if st.button(t["reset_results"]):
+            st.session_state["last_result"] = None
+            # remove checkbox store_now state so it doesn't remain checked
+            if "store_now" in st.session_state:
+                del st.session_state["store_now"]
+            results_placeholder.empty()
+            st.info("Results cleared.")
 
         # Feedback subheading + large text area
         st.markdown("---")
@@ -340,20 +382,22 @@ if predict_clicked:
         feedback_text = st.text_area("🗒️ Feedback (optional) — share your thoughts or report issues", height=140, placeholder="Type your feedback here...")
         if st.button(t["submit_feedback"]):
             if feedback_text.strip():
+                st.session_state["feedbacks"].append({
+                    "timestamp": datetime.now().isoformat(),
+                    "name": patient_name or "",
+                    "feedback": feedback_text
+                })
                 st.success("Thanks for your feedback!")
+                # optionally you can also write feedback to disk or DB here
             else:
                 st.warning("Please enter feedback before submitting.")
-
 else:
     results_placeholder.markdown("### 🔬 Prediction Results")
     results_placeholder.info("Fill symptoms and press **Predict Risk** to see results.")
 
-# ---------- Footer ----------
+# ---------------- Footer ----------------
 st.markdown("---")
 st.markdown(
     "<div class='footer'>© 2025 Neuroblastoma Risk Predictor | For educational use only — Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>",
     unsafe_allow_html=True
 )
-
-
-

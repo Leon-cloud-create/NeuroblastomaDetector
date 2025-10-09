@@ -250,7 +250,7 @@ if st.session_state.get("last_result"):
         st.markdown("**Suggestions:**")
         st.write(suggestion)
 
-        st.markdown(f"**Model confidence: {int(confidence * 100)}%**")
+        st.markdown("**Model confidence:**")
         st.progress(int(neuro_prob * 100))
 
         single_df = pd.DataFrame([res])
@@ -265,16 +265,18 @@ if st.session_state.get("last_result"):
             st.success("✅ Data stored.")
             st.session_state["patients_df"] = load_patients()
 
-        st.markdown("---")
-        if st.button(t["reset_results"]):
-            st.session_state["last_result"] = None
-            results_placeholder.empty()
-            st.info("Results cleared.")
-
-else:
-    results_placeholder.info("Fill symptoms and press **Predict Risk** to see results.")
+# ---------------- Feedback (above footer) ----------------
+st.markdown("---")
+st.subheader(t["feedback"])
+feedback_text = st.text_area("🗒️ Feedback (optional) — share your thoughts or report issues", height=140, placeholder="Type your feedback here...")
+if st.button(t["submit_feedback"]):
+    if feedback_text.strip():
+        st.success("Thanks for your feedback!")
+    else:
+        st.warning("Please enter feedback before submitting.")
 
 st.markdown("---")
 st.markdown("<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>", unsafe_allow_html=True)
+
 
 

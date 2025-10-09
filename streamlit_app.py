@@ -36,7 +36,7 @@ PATIENTS_CSV = "patients.csv"
 MODEL_PATH = "model.pkl"
 SCALER_PATH = "scaler.pkl"
 
-# ---------------- Translations (English only shown for brevity) ----------------
+# ---------------- Translations ----------------
 translations = {
     "en": {
         "title": "🏥 Neuroblastoma Risk Predictor",
@@ -51,7 +51,7 @@ translations = {
         "risk_high": "High Risk",
         "suggestions_low": "- Continue routine monitoring and regular pediatric visits.\n- If symptoms change or worsen, seek medical advice.",
         "suggestions_moderate": "- Arrange prompt clinical evaluation with a pediatrician.\n- Consider imaging or referral to a specialist.\n- Early detection is critical for treatment.",
-        "suggestions_high": "- Seek immediate medical attention; contact a pediatric specialist.\n- COnsider geting a Ct or MRI scan.\n- Possible treatments: chemotherapy, immunotherapy, or micro-patch vaccine trials.",
+        "suggestions_high": "- Seek immediate medical attention; contact a pediatric specialist.\n- Consider getting a CT or MRI scan.\n- Possible treatments: chemotherapy, immunotherapy, or micro-patch vaccine trials.",
         "store_data": "📦 Do you want your data stored? (will appear in Past Patient Data)",
         "feedback": "🗒️ Feedback",
         "submit_feedback": "Submit Feedback",
@@ -67,7 +67,7 @@ translations = {
         "download_all_csv": "Download all stored patients (CSV)",
         "fill_patient_note": "📝 Please fill out patient information first.",
         "reset_results": "🔄 Reset Results",
-        "risk_ref": "📊 **Risk Levels Reference:**\n\n• **0–60% → Low Risk** — Generally low probability of neuroblastoma.\n• **61–80% → Moderate Risk** — May require further clinical evaluation.\n• **81–100% → High Risk** — Immediate medical assessment recommended."
+        "risk_ref": "### 📊 Risk Levels Reference\n\n• **0–34% → Low Risk** — Generally low probability of neuroblastoma.\n• **35–69% → Moderate Risk** — May require further clinical evaluation.\n• **70–100% → High Risk** — Immediate medical assessment recommended."
     }
 }
 
@@ -191,12 +191,12 @@ def compute_and_store_result():
     neuro_prob = float(probs[1])
     confidence = float(np.max(probs))
 
-    # New thresholds: 0–60 low, 61–80 moderate, 81–100 high
-    if neuro_prob <= 0.60:
+    # Updated thresholds: 0–34 low, 35–69 moderate, 70–100 high
+    if neuro_prob <= 0.34:
         risk_level = t["risk_low"]
         dot_color = "#2ca02c"
         suggestion = t["suggestions_low"]
-    elif neuro_prob <= 0.80:
+    elif neuro_prob <= 0.69:
         risk_level = t["risk_moderate"]
         dot_color = "#f0ad4e"
         suggestion = t["suggestions_moderate"]
@@ -250,7 +250,7 @@ if st.session_state.get("last_result"):
         st.markdown("**Suggestions:**")
         st.write(suggestion)
 
-        st.markdown("**Model confidence:**")
+        st.markdown(f"**Model confidence: {int(confidence * 100)}%**")
         st.progress(int(neuro_prob * 100))
 
         single_df = pd.DataFrame([res])
@@ -276,4 +276,5 @@ else:
 
 st.markdown("---")
 st.markdown("<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>", unsafe_allow_html=True)
+
 

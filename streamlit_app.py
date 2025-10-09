@@ -119,13 +119,18 @@ with st.sidebar:
 st.title("🏥 Neuroblastoma Risk Predictor")
 
 # Disclaimer immediately under title
-st.markdown("**Disclaimer:** This tool is for informational and educational purposes only. It is NOT a medical diagnosis. Always consult a qualified healthcare professional for medical concerns.")
+st.markdown("This tool is for informational and educational purposes only. "
+            "It is not intended to provide medical advice, diagnosis, or treatment. "
+            "Always consult a licensed healthcare provider for medical concerns. "
+            "If you experience severe symptoms, seek emergency care immediately. "
+            "The AI model provides probabilistic insights and should never be interpreted as definitive.")
 
 st.subheader("🧠 Neuroblastoma in a Nutshell")
 st.write("""
 Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system.  
-It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or periorbital bruising.  
-This app provides an informational risk estimate derived from a trained model — it is not a substitute for clinical evaluation.
+It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or brusied eyes. 
+Neuroblastoma often goes undetected because of finacial issues which lead to children not being able to obtain scans and get treatment.
+This is why we provide a service for Neuroblastoma detection using symptoms which can be observed anywhere.
 """)
 
 st.markdown("---")
@@ -150,12 +155,9 @@ add_col1, add_col2 = st.columns(2)
 with add_col1:
     s_bone_pain = st.checkbox("Bone Pain (usually followed by swelling, fever, and limping)")
     s_cough = st.checkbox("Cough")
-    s_runny = st.checkbox("Runny / Stuffy nose")
 with add_col2:
     s_sore = st.checkbox("Sore Throat")
-    # placeholders to keep layout balanced
-    _ = st.empty()
-    _ = st.empty()
+    s_runny = st.checkbox("Runny / Stuffy nose")
 
 st.markdown("---")
 

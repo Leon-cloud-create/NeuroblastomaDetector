@@ -42,7 +42,7 @@ translations = {
         "title": "🏥 Neuroblastoma Risk Predictor",
         "disclaimer": "This tool is for informational and educational purposes only. It is not intended to provide medical advice, diagnosis, or treatment. Always consult a licensed healthcare provider.",
         "nutshell_title": "🧠 Neuroblastoma in a Nutshell",
-        "nutshell_text": "Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system...",
+        "nutshell_text": "Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system. It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or bulging eyes. Neuroblastoma is often detected at Stage 4 because its aggressive nature allows it to spread, or metastasize, to distant parts of the body, such as the bone marrow, liver, skin, and other organs, before the primary tumor grows large enough to cause noticeable local symptoms.",
         "major_symptoms": "🩺 Major Symptoms",
         "additional_symptoms": "➕ Additional Symptoms",
         "predict_button": "🔍 Predict Risk",
@@ -50,8 +50,8 @@ translations = {
         "risk_moderate": "Moderate Risk",
         "risk_high": "High Risk",
         "suggestions_low": "- Continue routine monitoring and regular pediatric visits.\n- If symptoms change or worsen, seek medical advice.",
-        "suggestions_moderate": "- Arrange prompt clinical evaluation with a pediatrician.\n- Consider imaging or referral to a specialist.",
-        "suggestions_high": "- Seek immediate medical attention; contact a pediatric specialist.\n- Possible treatments: chemotherapy, immunotherapy, or micro-patch vaccine trials.",
+        "suggestions_moderate": "- Arrange prompt clinical evaluation with a pediatrician.\n- Consider imaging or referral to a specialist.\n- Early detection is critical for treatment.",
+        "suggestions_high": "- Seek immediate medical attention; contact a pediatric specialist.\n- COnsider geting a Ct or MRI scan.\n- Possible treatments: chemotherapy, immunotherapy, or micro-patch vaccine trials.",
         "store_data": "📦 Do you want your data stored? (will appear in Past Patient Data)",
         "feedback": "🗒️ Feedback",
         "submit_feedback": "Submit Feedback",
@@ -111,7 +111,7 @@ if "last_result" not in st.session_state:
 
 # ---------------- Sidebar ----------------
 with st.sidebar:
-    st.markdown("### 🌐 Language")
+    st.markdown("### 🌐 Website Language")
     lang_display = st.selectbox("", options=["English"], index=0)
     lang = "en"
     t = translations[lang]

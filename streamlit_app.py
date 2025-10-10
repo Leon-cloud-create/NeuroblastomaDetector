@@ -330,7 +330,8 @@ else:
 
 # Display results
 st.markdown("**Model confidence:**")
-st.progress(int(confidence))st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
+st.progress(int(confidence))
+st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
 
 
 single_df = pd.DataFrame([res])

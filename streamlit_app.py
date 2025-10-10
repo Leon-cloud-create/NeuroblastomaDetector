@@ -248,14 +248,24 @@ def compute_and_store_result():
         int(s_runny),
         int(s_sore)
     ]
+
     X = np.array([features], dtype=float)
     Xs = scaler.transform(X)
     probs = model.predict_proba(Xs)[0]
     pred = model.predict(Xs)[0]
-    neuro_prob = float(probs[1])
-    confidence = float(np.max(probs))
 
-    # Updated thresholds: 0–34 low, 35–69 moderate, 70–100 high
+    neuro_prob = float(probs[1])
+    non_neuro_prob = float(probs[0])
+
+    # Confidence based on predicted class
+    if pred == 1:  # Neuroblastoma
+        confidence = neuro_prob * 100
+        prediction_text = "Neuroblastoma"
+    else:
+        confidence = non_neuro_prob * 100
+        prediction_text = "Not Neuroblastoma"
+
+    # Risk levels
     if neuro_prob <= 0.34:
         risk_level = t["risk_low"]
         dot_color = "#2ca02c"
@@ -274,16 +284,17 @@ def compute_and_store_result():
         "Date": str(assessment_date),
         "Age": age,
         "Gender": gender,
-        "Prediction": int(pred),
-        "Probability_%": round(neuro_prob*100,2),
-        "Confidence_%": round(confidence*100,2),
+        "Prediction": pred,
+        "Prediction_Text": prediction_text,
+        "Probability_%": round(neuro_prob*100, 2),
+        "Confidence_%": round(confidence, 2),
         "Risk": risk_level
     }
+
     st.session_state["last_result"] = {
         "result": result,
         "dot_color": dot_color,
         "suggestion": suggestion,
-        "neuro_prob": neuro_prob,
         "confidence": confidence
     }
 
@@ -299,53 +310,40 @@ if st.session_state.get("last_result"):
     res = r["result"]
     dot_color = r["dot_color"]
     suggestion = r["suggestion"]
-    neuro_prob = r["neuro_prob"]
     confidence = r["confidence"]
 
     with results_placeholder.container():
-        # ✅ Show risk levels card first
         st.markdown(t["risk_ref"])
         st.markdown("---")
 
         st.markdown("### 🔬 Prediction Results")
         st.markdown(f"<span class='risk-dot' style='background:{dot_color}'></span> **{res['Risk']}**", unsafe_allow_html=True)
-        st.write(f"**Prediction:** {'Neuroblastoma' if res['Prediction']==1 else 'Not Neuroblastoma'}")
+        st.write(f"**Prediction:** {res['Prediction_Text']}")
         st.write(f"**Probability:** {res['Probability_%']:.1f}%")
+
         st.markdown("**Suggestions:**")
         st.write(suggestion)
 
-        # Get prediction probabilities
-proba = model.predict_proba(np.array([features]))[0]
-non_neuro_prob = proba[0]
-neuro_prob = proba[1]
+        st.markdown("**Model confidence:**")
+        st.progress(int(confidence))
+        st.write(f"{confidence:.2f}% confident this patient has {res['Prediction_Text'].lower()}.")
 
-# Make prediction
-prediction = model.predict(np.array([features]))[0]
+        # Download CSV
+        single_df = pd.DataFrame([res])
+        st.download_button(
+            t["download_csv"],
+            data=single_df.to_csv(index=False).encode(),
+            file_name=f"assessment_{datetime.now().strftime('%Y%m%d')}.csv",
+            mime="text/csv"
+        )
 
-# Confidence logic based on which class was predicted
-if prediction == "Neuroblastoma":
-    confidence = neuro_prob * 100
-else:
-    confidence = non_neuro_prob * 100
+        st.markdown("---")
+        store = st.checkbox(t["store_data"], value=False)
+        if store:
+            save_patient_row(res)
+            st.success("✅ Data stored.")
+            st.session_state["patients_df"] = load_patients()
 
-# Display results
-st.markdown("**Model confidence:**")
-st.progress(int(confidence))
-st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
-
-
-
-single_df = pd.DataFrame([res])
-st.download_button(t["download_csv"], data=single_df.to_csv(index=False).encode(),
-                           file_name=f"assessment_{datetime.now().strftime('%Y%m%d')}.csv",
-                           mime="text/csv")
-
-st.markdown("---")
-store = st.checkbox(t["store_data"], value=False)
-if store:
-    save_patient_row(res)
-    st.success("✅ Data stored.")
-    st.session_state["patients_df"] = load_patients()
 
 # ---------------- Feedback (above footer) ----------------
 st.markdown("---")

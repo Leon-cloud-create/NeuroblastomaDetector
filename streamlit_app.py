@@ -330,8 +330,7 @@ else:
 
 # Display results
 st.markdown("**Model confidence:**")
-st.progress(int(confidence))
-st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
+st.progress(int(confidence))st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
 
 
 single_df = pd.DataFrame([res])
@@ -341,7 +340,7 @@ st.download_button(t["download_csv"], data=single_df.to_csv(index=False).encode(
 
 st.markdown("---")
 store = st.checkbox(t["store_data"], value=False)
-        if store:
+    if store:
             save_patient_row(res)
             st.success("✅ Data stored.")
             st.session_state["patients_df"] = load_patients()

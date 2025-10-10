@@ -315,14 +315,14 @@ if st.session_state.get("last_result"):
         st.write(suggestion)
 
         # Get prediction probabilities
-proba = model.predict_proba(user_data)[0]
+proba = model.predict_proba(np.array([features]))[0]
 non_neuro_prob = proba[0]
 neuro_prob = proba[1]
 
 # Make prediction
-prediction = model.predict(user_data)[0]
+prediction = model.predict(np.array([features]))[0]
 
-# Show confidence based on which one was predicted
+# Confidence logic based on which class was predicted
 if prediction == "Neuroblastoma":
     confidence = neuro_prob * 100
 else:
@@ -332,6 +332,7 @@ else:
 st.markdown("**Model confidence:**")
 st.progress(int(confidence))
 st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
+
 
 
 single_df = pd.DataFrame([res])

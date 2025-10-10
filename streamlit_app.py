@@ -39,7 +39,7 @@ SCALER_PATH = "scaler.pkl"
 
 # ---------------- Translations ----------------
 translations = {
-    "en": {
+    "English": {
         "title": "🏥 Neuroblastoma Risk Predictor",
         "disclaimer": "**DISCLAIMER:** This tool is for informational and educational purposes only. It is not intended to provide medical advice, diagnosis, or treatment. Always consult a licensed healthcare provider.",
         "nutshell_title": "🧠 Neuroblastoma in a Nutshell",
@@ -69,7 +69,7 @@ translations = {
         "fill_patient_note": "📝 Please fill out patient information first.",
         "risk_ref": "### 📊 Risk Levels Reference\n\n• **0–60% → Low Risk** — Generally low probability of neuroblastoma.\n• **61–80% → Moderate Risk** — May require further clinical evaluation.\n• **81–100% → High Risk** — Immediate medical assessment recommended."
     },
-    "es": {
+    "Spanish": {
         "title": "🏥 Predictor de Riesgo de Neuroblastoma",
         "disclaimer": "**DESCARGO DE RESPONSABILIDAD:** Esta herramienta es solo para fines informativos y educativos. No pretende proporcionar consejos médicos, diagnóstico o tratamiento. Siempre consulte a un profesional médico autorizado.",
         "nutshell_title": "🧠 Neuroblastoma en Resumen",
@@ -99,7 +99,7 @@ translations = {
         "fill_patient_note": "📝 Por favor complete primero la información del paciente.",
         "risk_ref": "### 📊 Niveles de Riesgo\n\n• **0–60% → Bajo** — Baja probabilidad de neuroblastoma.\n• **61–80% → Moderado** — Puede requerir evaluación médica.\n• **81–100% → Alto** — Evaluación médica inmediata recomendada."
     },
-    "fr": {
+    "French": {
         "title": "🏥 Prédicteur de Risque de Neuroblastome",
         "disclaimer": "**AVERTISSEMENT :** Cet outil est uniquement destiné à des fins d'information et d'éducation. Il ne remplace pas un avis médical professionnel. Consultez toujours un médecin qualifié.",
         "nutshell_title": "🧠 Le Neuroblastome en Bref",
@@ -127,7 +127,7 @@ translations = {
         "download_csv": "📥 Télécharger l'Évaluation (CSV)",
         "download_all_csv": "Télécharger tous les patients (CSV)",
         "fill_patient_note": "📝 Veuillez d'abord remplir les informations du patient.",
-        "risk_ref": "### 📊 Niveaux de Risque\n\n• **0–60 % → Faible** — Probabilité faible.\n• **61–80 % → Modéré** — Nécessite une évaluation.\n• **81–100 % → Élevé** — Consultation médicale urgente."
+        "risk_ref": "### 📊 Niveaux de Risque\n• **0–60 % → Faible** — Probabilité faible.\n• **61–80 % → Modéré** — Nécessite une évaluation.\n• **81–100 % → Élevé** — Consultation médicale urgente."
     }
 }
 
@@ -176,8 +176,8 @@ if "last_result" not in st.session_state:
 # ---------------- Sidebar ----------------
 with st.sidebar:
     st.markdown("### 🌐 Website Language")
-    lang_display = st.selectbox("", options=["English"], index=0)
-    lang = "en"
+    lang_display = st.selectbox("", options=["English, Spanish, French"], index=0)
+    lang = "English"
     t = translations[lang]
 
     st.markdown("---")
@@ -314,8 +314,25 @@ if st.session_state.get("last_result"):
         st.markdown("**Suggestions:**")
         st.write(suggestion)
 
-        st.markdown("**Model confidence:**")
-        st.progress(int(neuro_prob * 100))
+        # Get prediction probabilities
+proba = model.predict_proba(user_data)[0]
+non_neuro_prob = proba[0]
+neuro_prob = proba[1]
+
+# Make prediction
+prediction = model.predict(user_data)[0]
+
+# Show confidence based on which one was predicted
+if prediction == "Neuroblastoma":
+    confidence = neuro_prob * 100
+else:
+    confidence = non_neuro_prob * 100
+
+# Display results
+st.markdown("**Model confidence:**")
+st.progress(int(confidence))
+st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
+
 
         single_df = pd.DataFrame([res])
         st.download_button(t["download_csv"], data=single_df.to_csv(index=False).encode(),

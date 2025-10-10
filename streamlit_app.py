@@ -1,4 +1,4 @@
-# app.py (with Spanish & French + reduced top padding)
+# app.py (with Spanish & French + 4-tier risk system + reduced top padding)
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -48,9 +48,11 @@ translations = {
         "additional_symptoms": "➕ Additional Symptoms",
         "predict_button": "🔍 Predict Risk",
         "risk_low": "Low Risk",
+        "risk_mild": "Mild Risk",
         "risk_moderate": "Moderate Risk",
         "risk_high": "High Risk",
         "suggestions_low": "- Continue routine monitoring and regular pediatric visits.\n- If symptoms change or worsen, seek medical advice.",
+        "suggestions_mild": "- Monitor symptoms closely and consult pediatrician if needed.\n- Consider early clinical evaluation.",
         "suggestions_moderate": "- Arrange prompt clinical evaluation with a pediatrician.\n- Consider imaging or referral to a specialist.\n- Early detection is critical for treatment.",
         "suggestions_high": "- Seek immediate medical attention; contact a pediatric specialist.\n- Consider getting a CT or MRI scan.\n- Possible treatments: chemotherapy, immunotherapy, or micro-patch vaccine trials.",
         "store_data": "📦 Do you want your data stored? (will appear in Past Patient Data)",
@@ -67,7 +69,13 @@ translations = {
         "download_csv": "📥 Download assessment CSV",
         "download_all_csv": "Download all stored patients (CSV)",
         "fill_patient_note": "📝 Please fill out patient information first.",
-        "risk_ref": "### 📊 Risk Levels Reference\n\n• **0–60% → Low Risk** — Generally low probability of neuroblastoma.\n• **61–80% → Moderate Risk** — May require further clinical evaluation.\n• **81–100% → High Risk** — Immediate medical assessment recommended."
+        "risk_ref_title": "### 📊 Risk Levels Reference",
+        "risk_ref_text": """
+• **0–34% → Low Risk** — Generally low probability of neuroblastoma.
+• **35–50% → Mild Risk** — Monitor closely; early clinical evaluation may be considered.
+• **51–74% → Moderate Risk** — May require further clinical evaluation.
+• **75–100% → High Risk** — Immediate medical assessment recommended.
+"""
     },
     "Spanish": {
         "title": "🏥 Predictor de Riesgo de Neuroblastoma",
@@ -78,9 +86,11 @@ translations = {
         "additional_symptoms": "➕ Síntomas Adicionales",
         "predict_button": "🔍 Predecir Riesgo",
         "risk_low": "Riesgo Bajo",
+        "risk_mild": "Riesgo Leve",
         "risk_moderate": "Riesgo Moderado",
         "risk_high": "Riesgo Alto",
         "suggestions_low": "- Continuar con visitas pediátricas regulares.\n- Si los síntomas cambian o empeoran, busque atención médica.",
+        "suggestions_mild": "- Monitorear síntomas de cerca y consultar al pediatra si es necesario.\n- Considerar evaluación clínica temprana.",
         "suggestions_moderate": "- Evaluación clínica rápida con un pediatra.\n- Considerar imágenes médicas o derivación a un especialista.",
         "suggestions_high": "- Buscar atención médica inmediata; contactar un especialista pediátrico.\n- Posibles tratamientos: quimioterapia, inmunoterapia o vacunas experimentales.",
         "store_data": "📦 ¿Desea guardar sus datos? (aparecerán en Datos de Pacientes Anteriores)",
@@ -97,7 +107,13 @@ translations = {
         "download_csv": "📥 Descargar Evaluación (CSV)",
         "download_all_csv": "Descargar todos los pacientes (CSV)",
         "fill_patient_note": "📝 Por favor complete primero la información del paciente.",
-        "risk_ref": "### 📊 Niveles de Riesgo\n\n• **0–60% → Bajo** — Baja probabilidad de neuroblastoma.\n• **61–80% → Moderado** — Puede requerir evaluación médica.\n• **81–100% → Alto** — Evaluación médica inmediata recomendada."
+        "risk_ref_title": "### 📊 Niveles de Riesgo",
+        "risk_ref_text": """
+• **0–34% → Bajo** — Baja probabilidad de neuroblastoma.
+• **35–50% → Leve** — Monitorear de cerca; considerar evaluación clínica temprana.
+• **51–74% → Moderado** — Puede requerir evaluación médica adicional.
+• **75–100% → Alto** — Evaluación médica inmediata recomendada.
+"""
     },
     "French": {
         "title": "🏥 Prédicteur de Risque de Neuroblastome",
@@ -108,9 +124,11 @@ translations = {
         "additional_symptoms": "➕ Symptômes Supplémentaires",
         "predict_button": "🔍 Prédire le Risque",
         "risk_low": "Risque Faible",
+        "risk_mild": "Risque Léger",
         "risk_moderate": "Risque Modéré",
         "risk_high": "Risque Élevé",
         "suggestions_low": "- Poursuivre la surveillance et les visites régulières.\n- Consulter un médecin si les symptômes changent.",
+        "suggestions_mild": "- Surveiller les symptômes de près et consulter un pédiatre si nécessaire.\n- Envisager une évaluation clinique précoce.",
         "suggestions_moderate": "- Évaluation clinique rapide avec un pédiatre.\n- Envisager des examens d’imagerie.",
         "suggestions_high": "- Consulter immédiatement un spécialiste pédiatrique.\n- Possibles traitements : chimiothérapie, immunothérapie ou vaccins expérimentaux.",
         "store_data": "📦 Voulez-vous enregistrer les données ? (elles apparaîtront dans Données des Patients)",
@@ -127,13 +145,15 @@ translations = {
         "download_csv": "📥 Télécharger l'Évaluation (CSV)",
         "download_all_csv": "Télécharger tous les patients (CSV)",
         "fill_patient_note": "📝 Veuillez d'abord remplir les informations du patient.",
-        "risk_ref": "### 📊 Niveaux de Risque\n• **0–60 % → Faible** — Probabilité faible.\n• **61–80 % → Modéré** — Nécessite une évaluation.\n• **81–100 % → Élevé** — Consultation médicale urgente."
+        "risk_ref_title": "### 📊 Niveaux de Risque",
+        "risk_ref_text": """
+• **0–34 % → Faible** — Probabilité faible.
+• **35–50 % → Léger** — Surveiller de près; envisager évaluation clinique précoce.
+• **51–74 % → Modéré** — Nécessite une évaluation.
+• **75–100 % → Élevé** — Consultation médicale urgente.
+"""
     }
 }
-
-# ---------------- Model loader, helpers, main code (same as yours) ----------------
-# ✅ You can now paste all your remaining code (model loading, UI, predict, feedback, footer) unchanged.
-
 
 # ---------------- Load model & scaler ----------------
 @st.cache_resource
@@ -178,7 +198,6 @@ with st.sidebar:
     lang_display = st.selectbox("🌐 Website Language", options=["English", "Spanish", "French"], index=0)
     lang = lang_display
     t = translations[lang]
-
 
     st.markdown("---")
     st.info(t["fill_patient_note"])
@@ -270,7 +289,11 @@ def compute_and_store_result():
         risk_level = t["risk_low"]
         dot_color = "#2ca02c"
         suggestion = t["suggestions_low"]
-    elif neuro_prob <= 0.69:
+    elif neuro_prob <= 0.50:
+        risk_level = t["risk_mild"]
+        dot_color = "#ffc107"  # yellow
+        suggestion = t["suggestions_mild"]
+    elif neuro_prob <= 0.74:
         risk_level = t["risk_moderate"]
         dot_color = "#f0ad4e"
         suggestion = t["suggestions_moderate"]
@@ -313,7 +336,8 @@ if st.session_state.get("last_result"):
     confidence = r["confidence"]
 
     with results_placeholder.container():
-        st.markdown(t["risk_ref"])
+        st.markdown(t["risk_ref_title"])
+        st.markdown(t["risk_ref_text"])
         st.markdown("---")
 
         st.markdown("### 🔬 Prediction Results")
@@ -344,7 +368,6 @@ if st.session_state.get("last_result"):
             st.success("✅ Data stored.")
             st.session_state["patients_df"] = load_patients()
 
-
 # ---------------- Feedback (above footer) ----------------
 st.markdown("---")
 st.subheader(t["feedback"])
@@ -357,6 +380,7 @@ if st.button(t["submit_feedback"]):
 
 st.markdown("---")
 st.markdown("<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>", unsafe_allow_html=True)
+
 
 
 

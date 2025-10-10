@@ -341,10 +341,10 @@ st.download_button(t["download_csv"], data=single_df.to_csv(index=False).encode(
 
 st.markdown("---")
 store = st.checkbox(t["store_data"], value=False)
-    if store:
-            save_patient_row(res)
-            st.success("✅ Data stored.")
-            st.session_state["patients_df"] = load_patients()
+if store:
+    save_patient_row(res)
+    st.success("✅ Data stored.")
+    st.session_state["patients_df"] = load_patients()
 
 # ---------------- Feedback (above footer) ----------------
 st.markdown("---")

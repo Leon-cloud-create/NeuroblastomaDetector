@@ -334,13 +334,13 @@ st.progress(int(confidence))
 st.write(f"{confidence:.2f}% confident this patient has {prediction.lower()}.")
 
 
-        single_df = pd.DataFrame([res])
-        st.download_button(t["download_csv"], data=single_df.to_csv(index=False).encode(),
+single_df = pd.DataFrame([res])
+st.download_button(t["download_csv"], data=single_df.to_csv(index=False).encode(),
                            file_name=f"assessment_{datetime.now().strftime('%Y%m%d')}.csv",
                            mime="text/csv")
 
-        st.markdown("---")
-        store = st.checkbox(t["store_data"], value=False)
+st.markdown("---")
+store = st.checkbox(t["store_data"], value=False)
         if store:
             save_patient_row(res)
             st.success("✅ Data stored.")

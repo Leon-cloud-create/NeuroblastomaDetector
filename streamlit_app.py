@@ -1,4 +1,4 @@
-# app.py (updated risk thresholds and display card)
+# app.py (with Spanish & French + reduced top padding)
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -9,10 +9,11 @@ from datetime import datetime
 
 # ---------------- Config & CSS ----------------
 st.set_page_config(page_title="🏥 Neuroblastoma Risk Predictor", layout="wide")
+
 st.markdown(
     """
     <style>
-    .stApp { background-color: #ffffff; color: #0b2a4a; }
+    .stApp { background-color: #ffffff; color: #0b2a4a; margin-top: -40px !important; } /* reduces top gap */
     .card { background: #f8fafc; padding: 12px; border-radius: 8px; }
     div.stButton > button:first-child {
         width: 100%;
@@ -40,7 +41,7 @@ SCALER_PATH = "scaler.pkl"
 translations = {
     "en": {
         "title": "🏥 Neuroblastoma Risk Predictor",
-        "disclaimer": "This tool is for informational and educational purposes only. It is not intended to provide medical advice, diagnosis, or treatment. Always consult a licensed healthcare provider.",
+        "disclaimer": "**DISCLAIMER:** This tool is for informational and educational purposes only. It is not intended to provide medical advice, diagnosis, or treatment. Always consult a licensed healthcare provider.",
         "nutshell_title": "🧠 Neuroblastoma in a Nutshell",
         "nutshell_text": "Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system. It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or bulging eyes. Neuroblastoma is often detected at Stage 4 because its aggressive nature allows it to spread, or metastasize, to distant parts of the body, such as the bone marrow, liver, skin, and other organs, before the primary tumor grows large enough to cause noticeable local symptoms.",
         "major_symptoms": "🩺 Major Symptoms",
@@ -66,10 +67,73 @@ translations = {
         "download_csv": "📥 Download assessment CSV",
         "download_all_csv": "Download all stored patients (CSV)",
         "fill_patient_note": "📝 Please fill out patient information first.",
-        "reset_results": "🔄 Reset Results",
-        "risk_ref": "### 📊 Risk Levels Reference\n\n• **0–34% → Low Risk** — Generally low probability of neuroblastoma.\n• **35–69% → Moderate Risk** — May require further clinical evaluation.\n• **70–100% → High Risk** — Immediate medical assessment recommended."
+        "risk_ref": "### 📊 Risk Levels Reference\n\n• **0–60% → Low Risk** — Generally low probability of neuroblastoma.\n• **61–80% → Moderate Risk** — May require further clinical evaluation.\n• **81–100% → High Risk** — Immediate medical assessment recommended."
+    },
+    "es": {
+        "title": "🏥 Predictor de Riesgo de Neuroblastoma",
+        "disclaimer": "**DESCARGO DE RESPONSABILIDAD:** Esta herramienta es solo para fines informativos y educativos. No pretende proporcionar consejos médicos, diagnóstico o tratamiento. Siempre consulte a un profesional médico autorizado.",
+        "nutshell_title": "🧠 Neuroblastoma en Resumen",
+        "nutshell_text": "El neuroblastoma es un cáncer infantil poco común que surge de células nerviosas inmaduras del sistema nervioso simpático. A menudo afecta a bebés y niños pequeños, y se presenta con una masa abdominal, dolor óseo o ojos abultados. Frecuentemente se detecta en la Etapa 4 debido a su naturaleza agresiva, que le permite propagarse antes de que el tumor primario crezca lo suficiente como para causar síntomas locales evidentes.",
+        "major_symptoms": "🩺 Síntomas Principales",
+        "additional_symptoms": "➕ Síntomas Adicionales",
+        "predict_button": "🔍 Predecir Riesgo",
+        "risk_low": "Riesgo Bajo",
+        "risk_moderate": "Riesgo Moderado",
+        "risk_high": "Riesgo Alto",
+        "suggestions_low": "- Continuar con visitas pediátricas regulares.\n- Si los síntomas cambian o empeoran, busque atención médica.",
+        "suggestions_moderate": "- Evaluación clínica rápida con un pediatra.\n- Considerar imágenes médicas o derivación a un especialista.",
+        "suggestions_high": "- Buscar atención médica inmediata; contactar un especialista pediátrico.\n- Posibles tratamientos: quimioterapia, inmunoterapia o vacunas experimentales.",
+        "store_data": "📦 ¿Desea guardar sus datos? (aparecerán en Datos de Pacientes Anteriores)",
+        "feedback": "🗒️ Comentarios",
+        "submit_feedback": "Enviar Comentarios",
+        "name_optional": "Nombre (opcional)",
+        "age": "Edad (años)",
+        "gender": "Género",
+        "male": "Masculino",
+        "female": "Femenino",
+        "other": "Otro",
+        "assessment_date": "Fecha de Evaluación",
+        "past_patient_data": "📁 Datos de Pacientes Anteriores",
+        "download_csv": "📥 Descargar Evaluación (CSV)",
+        "download_all_csv": "Descargar todos los pacientes (CSV)",
+        "fill_patient_note": "📝 Por favor complete primero la información del paciente.",
+        "risk_ref": "### 📊 Niveles de Riesgo\n\n• **0–60% → Bajo** — Baja probabilidad de neuroblastoma.\n• **61–80% → Moderado** — Puede requerir evaluación médica.\n• **81–100% → Alto** — Evaluación médica inmediata recomendada."
+    },
+    "fr": {
+        "title": "🏥 Prédicteur de Risque de Neuroblastome",
+        "disclaimer": "**AVERTISSEMENT :** Cet outil est uniquement destiné à des fins d'information et d'éducation. Il ne remplace pas un avis médical professionnel. Consultez toujours un médecin qualifié.",
+        "nutshell_title": "🧠 Le Neuroblastome en Bref",
+        "nutshell_text": "Le neuroblastome est un cancer pédiatrique rare provenant des cellules nerveuses immatures du système nerveux sympathique. Il touche principalement les nourrissons et les jeunes enfants et se manifeste souvent par une masse abdominale, des douleurs osseuses ou des yeux saillants.",
+        "major_symptoms": "🩺 Symptômes Majeurs",
+        "additional_symptoms": "➕ Symptômes Supplémentaires",
+        "predict_button": "🔍 Prédire le Risque",
+        "risk_low": "Risque Faible",
+        "risk_moderate": "Risque Modéré",
+        "risk_high": "Risque Élevé",
+        "suggestions_low": "- Poursuivre la surveillance et les visites régulières.\n- Consulter un médecin si les symptômes changent.",
+        "suggestions_moderate": "- Évaluation clinique rapide avec un pédiatre.\n- Envisager des examens d’imagerie.",
+        "suggestions_high": "- Consulter immédiatement un spécialiste pédiatrique.\n- Possibles traitements : chimiothérapie, immunothérapie ou vaccins expérimentaux.",
+        "store_data": "📦 Voulez-vous enregistrer les données ? (elles apparaîtront dans Données des Patients)",
+        "feedback": "🗒️ Commentaires",
+        "submit_feedback": "Soumettre",
+        "name_optional": "Nom (optionnel)",
+        "age": "Âge (années)",
+        "gender": "Genre",
+        "male": "Homme",
+        "female": "Femme",
+        "other": "Autre",
+        "assessment_date": "Date d'Évaluation",
+        "past_patient_data": "📁 Données des Patients",
+        "download_csv": "📥 Télécharger l'Évaluation (CSV)",
+        "download_all_csv": "Télécharger tous les patients (CSV)",
+        "fill_patient_note": "📝 Veuillez d'abord remplir les informations du patient.",
+        "risk_ref": "### 📊 Niveaux de Risque\n\n• **0–60 % → Faible** — Probabilité faible.\n• **61–80 % → Modéré** — Nécessite une évaluation.\n• **81–100 % → Élevé** — Consultation médicale urgente."
     }
 }
+
+# ---------------- Model loader, helpers, main code (same as yours) ----------------
+# ✅ You can now paste all your remaining code (model loading, UI, predict, feedback, footer) unchanged.
+
 
 # ---------------- Load model & scaler ----------------
 @st.cache_resource

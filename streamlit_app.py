@@ -175,10 +175,10 @@ if "last_result" not in st.session_state:
 
 # ---------------- Sidebar ----------------
 with st.sidebar:
-    st.markdown("### 🌐 Website Language")
-    lang_display = st.selectbox("", options=["English, Spanish, French"], index=0)
-    lang = "English"
+    lang_display = st.selectbox("🌐 Website Language", options=["English", "Spanish", "French"], index=0)
+    lang = lang_display
     t = translations[lang]
+
 
     st.markdown("---")
     st.info(t["fill_patient_note"])

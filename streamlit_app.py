@@ -70,45 +70,38 @@ translations = {
         "download_all_csv": "Download all stored patients (CSV)",
         "fill_patient_note": "📝 Please fill out patient information first.",
         "risk_ref_title": "### 📊 Risk Levels Reference",
-        "risk_ref_text": """
-• **0–34% → Low Risk** — Generally low probability of neuroblastoma.
-• **35–50% → Mild Risk** — Monitor closely; early clinical evaluation may be considered.
-• **51–74% → Moderate Risk** — May require further clinical evaluation.
-• **75–100% → High Risk** — Immediate medical assessment recommended.
-""",
+        "risk_ref_text": "",
         "prediction_results_section": {
             "title": "🔬 Prediction Results",
             "prediction": "Prediction",
             "probability": "Probability",
+            "model_confidence": "Model Confidence",
             "suggestions": "Suggestions",
-            "model_confidence": "Model confidence",
-            "confidence_message": "confident this patient has",
-            "risk_ref": """### 📊 Risk Levels Reference
-
-• **0–34% → Low Risk** — Generally low probability of neuroblastoma.
-• **35–50% → Mild Risk** — Slightly elevated; observe and consult if symptoms persist.
-• **51–74% → Moderate Risk** — May require further clinical evaluation.
-• **75–100% → High Risk** — Immediate medical assessment recommended.
-"""
+            "confidence_message": "confident this patient has"
         },
+        "risk_levels": {
+            "low": "🟢 Low Risk (0–60%) — Maintain regular checkups and healthy habits.",
+            "moderate": "🟡 Moderate Risk (61–80%) — Monitor symptoms and consider diagnostic tests.",
+            "high": "🔴 High Risk (81–100%) — Consult a specialist immediately; treatment such as immunotherapy, chemotherapy, or micro-patch vaccines may be needed."
+        }
     },
 
     "Spanish": {
         "title": "🏥 Predictor de Riesgo de Neuroblastoma",
-        "disclaimer": "**DESCARGO DE RESPONSABILIDAD:** Esta herramienta es solo para fines informativos y educativos. No pretende proporcionar consejos médicos, diagnóstico o tratamiento. Siempre consulte a un profesional médico autorizado.",
+        "disclaimer": "**DESCARGO DE RESPONSABILIDAD:** Esta herramienta es solo para fines informativos y educativos. No pretende ofrecer consejos médicos, diagnósticos o tratamientos. Siempre consulte a un profesional médico autorizado.",
         "nutshell_title": "🧠 Neuroblastoma en Resumen",
-        "nutshell_text": "El neuroblastoma es un cáncer infantil poco común que surge de células nerviosas inmaduras del sistema nervioso simpático. A menudo afecta a bebés y niños pequeños, y se presenta con una masa abdominal, dolor óseo o ojos abultados. Frecuentemente se detecta en la Etapa 4 debido a su naturaleza agresiva, que le permite propagarse antes de que el tumor primario crezca lo suficiente como para causar síntomas locales evidentes.",
+        "nutshell_text": "El neuroblastoma es un cáncer infantil poco común que surge de células nerviosas inmaduras del sistema nervioso simpático. Afecta con mayor frecuencia a bebés y niños pequeños y suele presentarse con una masa abdominal, dolor óseo o ojos abultados. El neuroblastoma suele detectarse en la etapa 4 debido a su naturaleza agresiva, que le permite propagarse (hacer metástasis) a partes distantes del cuerpo antes de que el tumor principal sea lo suficientemente grande como para causar síntomas locales notorios.",
         "major_symptoms": "🩺 Síntomas Principales",
         "additional_symptoms": "➕ Síntomas Adicionales",
         "predict_button": "🔍 Predecir Riesgo",
-        "risk_low": "Riesgo Bajo",
+        "risk_low": "Bajo Riesgo",
         "risk_mild": "Riesgo Leve",
         "risk_moderate": "Riesgo Moderado",
-        "risk_high": "Riesgo Alto",
-        "suggestions_low": "- Continuar con visitas pediátricas regulares.\n- Si los síntomas cambian o empeoran, busque atención médica.",
-        "suggestions_mild": "- Monitorear síntomas de cerca y consultar al pediatra si es necesario.\n- Considerar evaluación clínica temprana.",
-        "suggestions_moderate": "- Evaluación clínica rápida con un pediatra.\n- Considerar imágenes médicas o derivación a un especialista.",
-        "suggestions_high": "- Buscar atención médica inmediata; contactar un especialista pediátrico.\n- Posibles tratamientos: quimioterapia, inmunoterapia o vacunas experimentales.",
+        "risk_high": "Alto Riesgo",
+        "suggestions_low": "- Continúe con revisiones pediátricas regulares.\n- Si los síntomas cambian o empeoran, busque consejo médico.",
+        "suggestions_mild": "- Monitoree los síntomas y consulte al pediatra si es necesario.\n- Considere una evaluación clínica temprana.",
+        "suggestions_moderate": "- Programe una evaluación clínica rápida con un pediatra.\n- Considere imágenes o derivación a un especialista.\n- La detección temprana es crítica para el tratamiento.",
+        "suggestions_high": "- Busque atención médica inmediata; contacte a un pediatra especialista.\n- Considere una tomografía o resonancia magnética.\n- Posibles tratamientos: quimioterapia, inmunoterapia o vacunas de microparche.",
         "store_data": "📦 ¿Desea guardar sus datos? (aparecerán en Datos de Pacientes Anteriores)",
         "feedback": "🗒️ Comentarios",
         "submit_feedback": "Enviar Comentarios",
@@ -120,86 +113,72 @@ translations = {
         "other": "Otro",
         "assessment_date": "Fecha de Evaluación",
         "past_patient_data": "📁 Datos de Pacientes Anteriores",
-        "download_csv": "📥 Descargar Evaluación (CSV)",
-        "download_all_csv": "Descargar todos los pacientes (CSV)",
-        "fill_patient_note": "📝 Por favor complete primero la información del paciente.",
-        "risk_ref_title": "### 📊 Niveles de Riesgo",
-        "risk_ref_text": """
-• **0–34% → Bajo** — Baja probabilidad de neuroblastoma.
-• **35–50% → Leve** — Monitorear de cerca; considerar evaluación clínica temprana.
-• **51–74% → Moderado** — Puede requerir evaluación médica adicional.
-• **75–100% → Alto** — Evaluación médica inmediata recomendada.
-""",
+        "download_csv": "📥 Descargar evaluación CSV",
+        "download_all_csv": "Descargar todos los pacientes guardados (CSV)",
+        "fill_patient_note": "📝 Complete primero la información del paciente.",
+        "risk_ref_title": "### 📊 Referencia de Niveles de Riesgo",
+        "risk_ref_text": "",
         "prediction_results_section": {
             "title": "🔬 Resultados de la Predicción",
             "prediction": "Predicción",
             "probability": "Probabilidad",
+            "model_confidence": "Confianza del Modelo",
             "suggestions": "Sugerencias",
-            "model_confidence": "Confianza del modelo",
-            "confidence_message": "de confianza en que este paciente tiene",
-            "risk_ref": """### 📊 Niveles de Riesgo
-
-• **0–34% → Riesgo Bajo** — Baja probabilidad de neuroblastoma.
-• **35–50% → Riesgo Leve** — Leve preocupación; observar y consultar si los síntomas persisten.
-• **51–74% → Riesgo Moderado** — Puede requerir evaluación médica.
-• **75–100% → Riesgo Alto** — Evaluación médica inmediata recomendada.
-"""
+            "confidence_message": "de confianza en que este paciente tiene"
         },
+        "risk_levels": {
+            "low": "🟢 Bajo Riesgo (0–60%) — Mantenga chequeos regulares y hábitos saludables.",
+            "moderate": "🟡 Riesgo Moderado (61–80%) — Monitoree los síntomas y considere pruebas de diagnóstico.",
+            "high": "🔴 Alto Riesgo (81–100%) — Consulte a un especialista de inmediato; el tratamiento como inmunoterapia, quimioterapia o vacunas de microparche puede ser necesario."
+        }
     },
 
     "French": {
         "title": "🏥 Prédicteur de Risque de Neuroblastome",
-        "disclaimer": "**AVERTISSEMENT :** Cet outil est uniquement destiné à des fins d'information et d'éducation. Il ne remplace pas un avis médical professionnel. Consultez toujours un médecin qualifié.",
+        "disclaimer": "**AVERTISSEMENT :** Cet outil est destiné uniquement à des fins d'information et d'éducation. Il ne vise pas à fournir des conseils médicaux, un diagnostic ou un traitement. Consultez toujours un professionnel de santé qualifié.",
         "nutshell_title": "🧠 Le Neuroblastome en Bref",
-        "nutshell_text": "Le neuroblastome est un cancer pédiatrique rare provenant des cellules nerveuses immatures du système nerveux sympathique. Il touche principalement les nourrissons et les jeunes enfants et se manifeste souvent par une masse abdominale, des douleurs osseuses ou des yeux saillants.",
+        "nutshell_text": "Le neuroblastome est un cancer pédiatrique rare issu de cellules nerveuses immatures du système nerveux sympathique. Il touche principalement les nourrissons et les jeunes enfants et se manifeste souvent par une masse abdominale, des douleurs osseuses ou des yeux bombés. Il est souvent détecté au stade 4, car sa nature agressive lui permet de se propager à la moelle osseuse, au foie, à la peau et à d'autres organes avant que la tumeur principale ne provoque des symptômes visibles.",
         "major_symptoms": "🩺 Symptômes Majeurs",
         "additional_symptoms": "➕ Symptômes Supplémentaires",
         "predict_button": "🔍 Prédire le Risque",
-        "risk_low": "Risque Faible",
+        "risk_low": "Faible Risque",
         "risk_mild": "Risque Léger",
         "risk_moderate": "Risque Modéré",
-        "risk_high": "Risque Élevé",
-        "suggestions_low": "- Poursuivre la surveillance et les visites régulières.\n- Consulter un médecin si les symptômes changent.",
-        "suggestions_mild": "- Surveiller les symptômes de près et consulter un pédiatre si nécessaire.\n- Envisager une évaluation clinique précoce.",
-        "suggestions_moderate": "- Évaluation clinique rapide avec un pédiatre.\n- Envisager des examens d’imagerie.",
-        "suggestions_high": "- Consulter immédiatement un spécialiste pédiatrique.\n- Possibles traitements : chimiothérapie, immunothérapie ou vaccins expérimentaux.",
-        "store_data": "📦 Voulez-vous enregistrer les données ? (elles apparaîtront dans Données des Patients)",
+        "risk_high": "Haut Risque",
+        "suggestions_low": "- Continuez les visites pédiatriques régulières.\n- Si les symptômes changent ou s'aggravent, consultez un médecin.",
+        "suggestions_mild": "- Surveillez attentivement les symptômes et consultez un pédiatre si nécessaire.\n- Envisagez une évaluation clinique précoce.",
+        "suggestions_moderate": "- Planifiez une évaluation clinique rapide avec un pédiatre.\n- Envisagez une imagerie ou une référence à un spécialiste.\n- La détection précoce est essentielle pour le traitement.",
+        "suggestions_high": "- Consultez immédiatement un spécialiste pédiatrique.\n- Envisagez un scanner ou une IRM.\n- Traitements possibles : chimiothérapie, immunothérapie ou vaccins à micropatch.",
+        "store_data": "📦 Souhaitez-vous enregistrer vos données ? (apparaîtra dans les données des patients précédents)",
         "feedback": "🗒️ Commentaires",
-        "submit_feedback": "Soumettre",
-        "name_optional": "Nom (optionnel)",
+        "submit_feedback": "Soumettre un Commentaire",
+        "name_optional": "Nom (facultatif)",
         "age": "Âge (années)",
         "gender": "Genre",
         "male": "Homme",
         "female": "Femme",
         "other": "Autre",
         "assessment_date": "Date d'Évaluation",
-        "past_patient_data": "📁 Données des Patients",
-        "download_csv": "📥 Télécharger l'Évaluation (CSV)",
-        "download_all_csv": "Télécharger tous les patients (CSV)",
+        "past_patient_data": "📁 Données des Patients Précédents",
+        "download_csv": "📥 Télécharger l'évaluation (CSV)",
+        "download_all_csv": "Télécharger tous les patients enregistrés (CSV)",
         "fill_patient_note": "📝 Veuillez d'abord remplir les informations du patient.",
-        "risk_ref_title": "### 📊 Niveaux de Risque",
-        "risk_ref_text": """
-• **0–34 % → Faible** — Probabilité faible.
-• **35–50 % → Léger** — Surveiller de près; envisager évaluation clinique précoce.
-• **51–74 % → Modéré** — Nécessite une évaluation.
-• **75–100 % → Élevé** — Consultation médicale urgente.
-""",
+        "risk_ref_title": "### 📊 Référence des Niveaux de Risque",
+        "risk_ref_text": "",
         "prediction_results_section": {
             "title": "🔬 Résultats de la Prédiction",
             "prediction": "Prédiction",
             "probability": "Probabilité",
+            "model_confidence": "Confiance du Modèle",
             "suggestions": "Suggestions",
-            "model_confidence": "Confiance du modèle",
-            "confidence_message": "confiant que ce patient présente",
-            "risk_ref": """### 📊 Niveaux de Risque
-
-• **0–34% → Faible** — Probabilité faible de neuroblastome.
-• **35–50% → Léger** — Légèrement élevé; surveiller et consulter si nécessaire.
-• **51–74% → Modéré** — Nécessite une évaluation clinique.
-• **75–100% → Élevé** — Consultation médicale urgente recommandée.
-"""
+            "confidence_message": "confiant que ce patient présente"
         },
-    },
+        "risk_levels": {
+            "low": "🟢 Faible Risque (0–60%) — Maintenez des examens réguliers et de bonnes habitudes de santé.",
+            "moderate": "🟡 Risque Modéré (61–80%) — Surveillez les symptômes et envisagez des tests de diagnostic.",
+            "high": "🔴 Haut Risque (81–100%) — Consultez immédiatement un spécialiste ; un traitement comme l’immunothérapie, la chimiothérapie ou les vaccins à micropatch peut être nécessaire."
+        }
+    }
 }
 
 # ---------------- Load model & scaler ----------------

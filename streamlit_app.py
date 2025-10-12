@@ -282,7 +282,7 @@ def compute_and_store_result():
         prediction_text = "Neuroblastoma"
     else:
         confidence = non_neuro_prob * 100
-        prediction_text = "Not Neuroblastoma"
+        prediction_text = "No Neuroblastoma"
 
     # Risk levels
     if neuro_prob <= 0.34:

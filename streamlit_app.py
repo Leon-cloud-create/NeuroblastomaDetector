@@ -75,8 +75,17 @@ translations = {
 • **35–50% → Mild Risk** — Monitor closely; early clinical evaluation may be considered.
 • **51–74% → Moderate Risk** — May require further clinical evaluation.
 • **75–100% → High Risk** — Immediate medical assessment recommended.
-"""
     },
+    "prediction_results_section": {
+    "title": "🔬 Prediction Results",
+    "prediction": "Prediction",
+    "probability": "Probability",
+    "suggestions": "Suggestions",
+    "model_confidence": "Model confidence",
+    "confidence_message": "confident this patient has",
+    "risk_ref": "### 📊 Risk Levels Reference\n\n• **0–34% → Low Risk** — Generally low probability of neuroblastoma.\n• **35–50% → Mild Risk** — Slightly elevated; observe and consult if symptoms persist.\n• **51–74% → Moderate Risk** — May require further clinical evaluation.\n• **75–100% → High Risk** — Immediate medical assessment recommended."
+},
+
     "Spanish": {
         "title": "🏥 Predictor de Riesgo de Neuroblastoma",
         "disclaimer": "**DESCARGO DE RESPONSABILIDAD:** Esta herramienta es solo para fines informativos y educativos. No pretende proporcionar consejos médicos, diagnóstico o tratamiento. Siempre consulte a un profesional médico autorizado.",
@@ -113,8 +122,17 @@ translations = {
 • **35–50% → Leve** — Monitorear de cerca; considerar evaluación clínica temprana.
 • **51–74% → Moderado** — Puede requerir evaluación médica adicional.
 • **75–100% → Alto** — Evaluación médica inmediata recomendada.
-"""
     },
+    "prediction_results_section": {
+    "title": "🔬 Resultados de la Predicción",
+    "prediction": "Predicción",
+    "probability": "Probabilidad",
+    "suggestions": "Sugerencias",
+    "model_confidence": "Confianza del modelo",
+    "confidence_message": "de confianza en que este paciente tiene",
+    "risk_ref": "### 📊 Niveles de Riesgo\n\n• **0–34% → Riesgo Bajo** — Baja probabilidad de neuroblastoma.\n• **35–50% → Riesgo Leve** — Leve preocupación; observar y consultar si los síntomas persisten.\n• **51–74% → Riesgo Moderado** — Puede requerir evaluación médica.\n• **75–100% → Riesgo Alto** — Evaluación médica inmediata recomendada."
+},
+
     "French": {
         "title": "🏥 Prédicteur de Risque de Neuroblastome",
         "disclaimer": "**AVERTISSEMENT :** Cet outil est uniquement destiné à des fins d'information et d'éducation. Il ne remplace pas un avis médical professionnel. Consultez toujours un médecin qualifié.",
@@ -151,8 +169,17 @@ translations = {
 • **35–50 % → Léger** — Surveiller de près; envisager évaluation clinique précoce.
 • **51–74 % → Modéré** — Nécessite une évaluation.
 • **75–100 % → Élevé** — Consultation médicale urgente.
-"""
     }
+    "prediction_results_section": {
+    "title": "🔬 Résultats de la Prédiction",
+    "prediction": "Prédiction",
+    "probability": "Probabilité",
+    "suggestions": "Suggestions",
+    "model_confidence": "Confiance du modèle",
+    "confidence_message": "confiant que ce patient présente",
+    "risk_ref": "### 📊 Niveaux de Risque\n\n• **0–34% → Faible** — Probabilité faible de neuroblastome.\n• **35–50% → Léger** — Légèrement élevé; surveiller et consulter si nécessaire.\n• **51–74% → Modéré** — Nécessite une évaluation clinique.\n• **75–100% → Élevé** — Consultation médicale urgente recommandée."
+},
+
 }
 
 # ---------------- Load model & scaler ----------------

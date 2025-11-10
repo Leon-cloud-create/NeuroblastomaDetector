@@ -7,6 +7,8 @@ import io
 import os
 from datetime import datetime
 
+st.write("✅ Theme loaded:", st.config.get_option("theme.base"))
+
 # ---------------- Config & CSS ----------------
 st.set_page_config(page_title="🏥 Neuroblastoma Risk Predictor", layout="wide")
 

@@ -1,4 +1,3 @@
-# app.py (with Spanish & French + 4-tier risk system + reduced top padding)
 import streamlit as st
 import numpy as np
 import pandas as pd
@@ -7,7 +6,34 @@ import io
 import os
 from datetime import datetime
 
+# ---------------- Config & CSS ----------------
+st.set_page_config(page_title="🏥 Neuroblastoma Risk Predictor", layout="wide")
+
+# Verify that theme is correctly applied
 st.write("✅ Theme loaded:", st.config.get_option("theme.base"))
+
+st.markdown(
+    """
+    <style>
+    .stApp { background-color: #ffffff; color: #0b2a4a; margin-top: -40px !important; } /* reduces top gap */
+    .card { background: #f8fafc; padding: 12px; border-radius: 8px; }
+    div.stButton > button:first-child {
+        width: 100%;
+        background-color: #0b66c3;
+        color: white;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 8px;
+        padding: 0.85em 0;
+    }
+    div.stButton > button:first-child:hover { background-color: #094c8d; }
+    .risk-dot { display:inline-block; width:18px; height:18px; border-radius:50%; margin-right:8px; vertical-align:middle; }
+    .footer { text-align:center; color:gray; padding:10px 0; margin-top:18px; }
+    .small-muted { color:#6b7280; font-size:13px; }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
 # ---------------- Config & CSS ----------------
 st.set_page_config(page_title="🏥 Neuroblastoma Risk Predictor", layout="wide")

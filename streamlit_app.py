@@ -284,7 +284,7 @@ st.markdown("---")
 
 # ------ Symptoms ------
 st.subheader(t["major_symptoms"])
-maj_col1, maj_col2 = st.columns(1)
+maj_col1 = st.columns(1)
 with maj_col1:
     s_lump = st.checkbox("Large/Medium lump (usually on abdomen, chest, or neck)")
     s_abdominal_pain = st.checkbox("Abdominal pain")
@@ -297,7 +297,7 @@ with maj_col1:
 
 st.markdown("---")
 st.subheader(t["additional_symptoms"])
-add_col1, add_col2 = st.columns(1)
+add_col1 = st.columns(1)
 with add_col1:
     s_fever = st.checkbox("Fever")
     s_cough = st.checkbox("Cough")

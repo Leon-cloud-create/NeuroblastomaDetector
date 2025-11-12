@@ -284,13 +284,12 @@ st.markdown("---")
 
 # ------ Symptoms ------
 st.subheader(t["major_symptoms"])
-maj_col1, maj_col2 = st.columns(2)
+maj_col1, maj_col2 = st.columns(1)
 with maj_col1:
     s_lump = st.checkbox("Large/Medium lump (usually on abdomen, chest, or neck)")
     s_abdominal_pain = st.checkbox("Abdominal pain")
     s_weight_loss = st.checkbox("Unexplained weight loss")
     s_bone_pain = st.checkbox("Bone Pain (usually followed by swelling, fever, and limping)")
-with maj_col2:
     s_fatigue = st.checkbox("Fatigue / Weakness")
     s_bulging_eyes = st.checkbox("Bulging or bruised eyes")
     s_constipation = st.checkbox("Constipation")
@@ -298,11 +297,10 @@ with maj_col2:
 
 st.markdown("---")
 st.subheader(t["additional_symptoms"])
-add_col1, add_col2 = st.columns(2)
+add_col1, add_col2 = st.columns(1)
 with add_col1:
     s_fever = st.checkbox("Fever")
     s_cough = st.checkbox("Cough")
-with add_col2:
     s_sore = st.checkbox("Sore Throat")
     s_runny = st.checkbox("Runny / Stuffy nose")
 

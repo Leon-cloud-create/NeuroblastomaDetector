@@ -45,6 +45,7 @@ translations = {
         "nutshell_text": "Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system. It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or bulging eyes. Neuroblastoma is often detected at Stage 4 because its aggressive nature allows it to spread, or metastasize, to distant parts of the body, such as the bone marrow, liver, skin, and other organs, before the primary tumor grows large enough to cause noticeable local symptoms.",
         "major_symptoms": "🩺 Major Symptoms",
         "additional_symptoms": "➕ Additional Symptoms",
+        "lab_results_title": "🔬 Lab Results",
         "symptom_list": {
             "lump": "Large/Medium lump (usually on abdomen, chest, or neck)",
             "abdominal_pain": "Abdominal pain",
@@ -57,7 +58,11 @@ translations = {
             "fever": "Fever",
             "cough": "Cough",
             "sore_throat": "Sore Throat",
-            "runny_nose": "Runny / Stuffy nose"
+            "runny_nose": "Runny / Stuffy nose",
+            "mycn": "MYCN Amplification",
+            "alk": "ALK Mutation",
+            "deletion_11q": "11q deletion",
+            "gain_17q": "17q gain"
         },
         "predict_button": "🔍 Predict Risk",
         "risk_low": "Low Risk",
@@ -103,6 +108,7 @@ translations = {
         "nutshell_text": "El neuroblastoma es un cáncer infantil poco común que surge de células nerviosas inmaduras del sistema nervioso simpático. Afecta con mayor frecuencia a bebés y niños pequeños y suele presentarse con una masa abdominal, dolor óseo o ojos abultados. El neuroblastoma suele detectarse en la etapa 4 debido a su naturaleza agresiva, que le permite propagarse (hacer metástasis) a partes distantes del cuerpo antes de que el tumor principal sea lo suficientemente grande como para causar síntomas locales notorios.",
         "major_symptoms": "🩺 Síntomas Principales",
         "additional_symptoms": "➕ Síntomas Adicionales",
+        "lab_results_title": "🔬 Resultados de Laboratorio",
         "symptom_list": {
             "lump": "Bulto grande/mediano (generalmente en abdomen, pecho o cuello)",
             "abdominal_pain": "Dolor abdominal",
@@ -115,7 +121,11 @@ translations = {
             "fever": "Fiebre",
             "cough": "Tos",
             "sore_throat": "Dolor de garganta",
-            "runny_nose": "Nariz con mocos / congestionada"
+            "runny_nose": "Nariz con mocos / congestionada",
+            "mycn": "Amplificación MYCN",
+            "alk": "Mutación ALK",
+            "deletion_11q": "Deleción 11q",
+            "gain_17q": "Ganancia 17q"
         },
         "predict_button": "🔍 Predecir Riesgo",
         "risk_low": "Bajo Riesgo",
@@ -161,6 +171,7 @@ translations = {
         "nutshell_text": "Le neuroblastome est un cancer pédiatrique rare provenant des cellules nerveuses immatures du système nerveux sympathique. Il touche principalement les nourrissons et les jeunes enfants et se manifeste souvent par une masse abdominale, des douleurs osseuses ou des yeux saillants.",
         "major_symptoms": "🩺 Symptômes Majeurs",
         "additional_symptoms": "➕ Symptômes Supplémentaires",
+        "lab_results_title": "🔬 Résultats de Laboratoire",
         "symptom_list": {
             "lump": "Masse grande/moyenne (généralement sur l'abdomen, la poitrine ou le cou)",
             "abdominal_pain": "Douleur abdominale",
@@ -173,7 +184,11 @@ translations = {
             "fever": "Fièvre",
             "cough": "Toux",
             "sore_throat": "Mal de gorge",
-            "runny_nose": "Nez qui coule / bouché"
+            "runny_nose": "Nez qui coule / bouché",
+            "mycn": "Amplification MYCN",
+            "alk": "Mutation ALK",
+            "deletion_11q": "Délétion 11q",
+            "gain_17q": "Gain 17q"
         },
         "predict_button": "🔍 Prédire le Risque",
         "risk_low": "Risque Faible",
@@ -199,16 +214,16 @@ translations = {
         "download_all_csv": "Télécharger tous les patients (CSV)",
         "fill_patient_note": "📝 Veuillez d'abord remplir les informations du patient.",
         "risk_ref_title": "### 📊 Niveaux de Risque",
-        "risk_ref_text": """• **0–34 % → Faible** — Probabilité faible de neuroblastome.
+        "risk_ref_text": """• **0–34 % → Faible** — Probabilité faible de neuroblastoma.
 • **35–50 % → Léger** — Surveiller de près; envisager évaluation clinique précoce.
 • **51–74 % → Modéré** — Peut nécessiter une évaluation supplémentaire.
 • **75–100 % → Élevé** — Consultation médicale urgente recommandée.""",
         "prediction_results_section": {
             "title": "🔬 Résultats de la Prédiction",
             "prediction": "Prédiction",
-            "probability": "Probabilité",
+            "probability": "Probabilidad",
             "model_confidence": "Confiance du Modèle",
-            "suggestions": "Suggestions",
+            "suggestions": "Sugerencias",
             "confidence_message": "confiant que ce patient présente"
         }
     }
@@ -284,27 +299,38 @@ st.markdown("---")
 
 # ------ Symptoms ------
 st.subheader(t["major_symptoms"])
-maj_col1, maj_col2 = st.columns(1)
+maj_col1, maj_col2 = st.columns(2)
 with maj_col1:
-    s_lump = st.checkbox("Large/Medium lump (usually on abdomen, chest, or neck)")
-    s_abdominal_pain = st.checkbox("Abdominal pain")
-    s_weight_loss = st.checkbox("Unexplained weight loss")
-    s_bone_pain = st.checkbox("Bone Pain (usually followed by swelling, fever, and limping)")
-with maj_col2:    
-    s_fatigue = st.checkbox("Fatigue / Weakness")
-    s_bulging_eyes = st.checkbox("Bulging or bruised eyes")
-    s_constipation = st.checkbox("Constipation")
-    s_aches = st.checkbox("Aches/Pain (usually in the leg causing limping)")
+    s_lump = st.checkbox(t["symptom_list"]["lump"])
+    s_abdominal_pain = st.checkbox(t["symptom_list"]["abdominal_pain"])
+    s_weight_loss = st.checkbox(t["symptom_list"]["weight_loss"])
+    s_bone_pain = st.checkbox(t["symptom_list"]["bone_pain"])
+with maj_col2:
+    s_fatigue = st.checkbox(t["symptom_list"]["fatigue"])
+    s_bulging_eyes = st.checkbox(t["symptom_list"]["bulging_eyes"])
+    s_constipation = st.checkbox(t["symptom_list"]["constipation"])
+    s_aches = st.checkbox(t["symptom_list"]["aches"])
 
 st.markdown("---")
 st.subheader(t["additional_symptoms"])
-add_col1, add_col2 = st.columns(1)
+add_col1, add_col2 = st.columns(2)
 with add_col1:
-    s_fever = st.checkbox("Fever")
-    s_cough = st.checkbox("Cough")
+    s_fever = st.checkbox(t["symptom_list"]["fever"])
+    s_cough = st.checkbox(t["symptom_list"]["cough"])
 with add_col2:
-    s_sore = st.checkbox("Sore Throat")
-    s_runny = st.checkbox("Runny / Stuffy nose")
+    s_sore = st.checkbox(t["symptom_list"]["sore_throat"])
+    s_runny = st.checkbox(t["symptom_list"]["runny_nose"])
+
+# ------ Lab Results (NEW SECTION) ------
+st.markdown("---")
+st.subheader(t["lab_results_title"])
+lab_col1, lab_col2 = st.columns(2)
+with lab_col1:
+    s_mycn = st.checkbox(t["symptom_list"]["mycn"])
+    s_alk = st.checkbox(t["symptom_list"]["alk"])
+with lab_col2:
+    s_11q = st.checkbox(t["symptom_list"]["deletion_11q"])
+    s_17q = st.checkbox(t["symptom_list"]["gain_17q"])
 
 st.markdown("---")
 predict_clicked = st.button(t["predict_button"])
@@ -325,7 +351,11 @@ def compute_and_store_result():
         int(s_bone_pain),
         int(s_cough),
         int(s_runny),
-        int(s_sore)
+        int(s_sore),
+        int(s_mycn),
+        int(s_alk),
+        int(s_11q),
+        int(s_17q)
     ]
 
     X = np.array([features], dtype=float)
@@ -403,7 +433,7 @@ if st.session_state.get("last_result"):
         st.markdown("### 🔬 Prediction Results")
         st.markdown(f"<span class='risk-dot' style='background:{dot_color}'></span> **{res['Risk']}**", unsafe_allow_html=True)
         st.write(f"**Prediction:** {res['Prediction_Text']}")
-        st.write(f"**Probability:** {res['Probability_%']:.1f}%")
+        st.write(f"**Probability:** {res['Probability_%"]:.1f}%")
 
         st.markdown("**Suggestions:**")
         st.write(suggestion)
@@ -440,7 +470,3 @@ if st.button(t["submit_feedback"]):
 
 st.markdown("---")
 st.markdown("<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>", unsafe_allow_html=True)
-
-
-
-

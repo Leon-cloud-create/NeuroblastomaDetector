@@ -433,7 +433,7 @@ if st.session_state.get("last_result"):
         st.markdown("### 🔬 Prediction Results")
         st.markdown(f"<span class='risk-dot' style='background:{dot_color}'></span> **{res['Risk']}**", unsafe_allow_html=True)
         st.write(f"**Prediction:** {res['Prediction_Text']}")
-        st.write(f"**Probability:** {res['Probability_%"]:.1f}%")
+        st.write(f'**Probability:** {res["Probability_%"]:.1f}%') # Fixed syntax error here
 
         st.markdown("**Suggestions:**")
         st.write(suggestion)

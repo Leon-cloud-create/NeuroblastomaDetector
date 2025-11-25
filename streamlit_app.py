@@ -57,8 +57,11 @@ translations = {
             "aches": "Aches/Pain (usually in the leg causing limping)",
             "fever": "Fever",
             "cough": "Cough",
+            "runny_nose": "Runny/Stuffy nose",
             "sore_throat": "Sore Throat",
-            "runny_nose": "Runny / Stuffy nose",
+            "unexplained_pain": "Unexplained pain",
+            "high_bp": "High Blood Pressure (BP)",
+            "vomiting": "Vomiting",
             "mycn": "MYCN Amplification",
             "alk": "ALK Mutation",
             "deletion_11q": "11q deletion",
@@ -88,10 +91,7 @@ translations = {
         "download_all_csv": "Download all stored patients (CSV)",
         "fill_patient_note": "📝 Please fill out patient information first.",
         "risk_ref_title": "### 📊 Risk Levels Reference",
-        "risk_ref_text": """• **0–34% → Low Risk** — Generally low probability of neuroblastoma.
-• **35–50% → Mild Risk** — Monitor closely; early clinical evaluation may be considered.
-• **51–74% → Moderate Risk** — May require further clinical evaluation.
-• **75–100% → High Risk** — Immediate medical assessment recommended.""",
+        "risk_ref_text": """• **0–34% → Low Risk** — Generally low probability of neuroblastoma.\n• **35–50% → Mild Risk** — Monitor closely; early clinical evaluation may be considered.\n• **51–74% → Moderate Risk** — May require further clinical evaluation.\n• **75–100% → High Risk** — Immediate medical assessment recommended.""",
         "prediction_results_section": {
             "title": "🔬 Prediction Results",
             "prediction": "Prediction",
@@ -120,8 +120,11 @@ translations = {
             "aches": "Dolores (generalmente en la pierna causando cojera)",
             "fever": "Fiebre",
             "cough": "Tos",
+            "runny_nose": "Nariz que moquea/congestionada",
             "sore_throat": "Dolor de garganta",
-            "runny_nose": "Nariz con mocos / congestionada",
+            "unexplained_pain": "Dolor inexplicable",
+            "high_bp": "Presión arterial alta (PA)",
+            "vomiting": "Vómitos",
             "mycn": "Amplificación MYCN",
             "alk": "Mutación ALK",
             "deletion_11q": "Deleción 11q",
@@ -151,10 +154,7 @@ translations = {
         "download_all_csv": "Descargar todos los pacientes (CSV)",
         "fill_patient_note": "📝 Por favor complete primero la información del paciente.",
         "risk_ref_title": "### 📊 Niveles de Riesgo",
-        "risk_ref_text": """• **0–34% → Bajo** — Baja probabilidad de neuroblastoma.
-• **35–50% → Leve** — Monitorear de cerca; considerar evaluación clínica temprana.
-• **51–74% → Moderado** — Puede requerir evaluación médica adicional.
-• **75–100% → Alto** — Evaluación médica inmediata recomendada.""",
+        "risk_ref_text": """• **0–34% → Bajo** — Baja probabilidad de neuroblastoma.\n• **35–50% → Leve** — Monitorear de cerca; considerar evaluación clínica temprana.\n• **51–74% → Moderado** — Puede requerir evaluación médica adicional.\n• **75–100% → Alto** — Evaluación médica inmediata recomendada.""",
         "prediction_results_section": {
             "title": "🔬 Resultados de la Predicción",
             "prediction": "Predicción",
@@ -183,8 +183,11 @@ translations = {
             "aches": "Douleurs (souvent dans la jambe causant une boiterie)",
             "fever": "Fièvre",
             "cough": "Toux",
+            "runny_nose": "Nez qui coule/bouché",
             "sore_throat": "Mal de gorge",
-            "runny_nose": "Nez qui coule / bouché",
+            "unexplained_pain": "Douleur inexpliquée",
+            "high_bp": "Hypertension artérielle (TA)",
+            "vomiting": "Vomissements",
             "mycn": "Amplification MYCN",
             "alk": "Mutation ALK",
             "deletion_11q": "Délétion 11q",
@@ -214,10 +217,7 @@ translations = {
         "download_all_csv": "Télécharger tous les patients (CSV)",
         "fill_patient_note": "📝 Veuillez d'abord remplir les informations du patient.",
         "risk_ref_title": "### 📊 Niveaux de Risque",
-        "risk_ref_text": """• **0–34 % → Faible** — Probabilité faible de neuroblastoma.
-• **35–50 % → Léger** — Surveiller de près; envisager évaluation clinique précoce.
-• **51–74 % → Modéré** — Peut nécessiter une évaluation supplémentaire.
-• **75–100 % → Élevé** — Consultation médicale urgente recommandée.""",
+        "risk_ref_text": """• **0–34 % → Faible** — Probabilité faible de neuroblastoma.\n• **35–50 % → Léger** — Surveiller de près; envisager évaluation clinique précoce.\n• **51–74 % → Modéré** — Peut nécessiter une évaluation supplémentaire.\n• **75–100 % → Élevé** — Consultation médicale urgente recommandée.""",
         "prediction_results_section": {
             "title": "🔬 Résultats de la Prédiction",
             "prediction": "Prédiction",
@@ -313,12 +313,16 @@ with maj_col2:
 
 st.markdown("---")
 st.subheader(t["additional_symptoms"])
-add_col1, add_col2 = st.columns(2)
+add_col1, add_col2, add_col3 = st.columns(3)
 with add_col1:
     s_fever = st.checkbox(t["symptom_list"]["fever"])
     s_cough = st.checkbox(t["symptom_list"]["cough"])
 with add_col2:
     s_sore = st.checkbox(t["symptom_list"]["sore_throat"])
+    s_unexplained_pain = st.checkbox(t["symptom_list"]["unexplained_pain"])
+with add_col3:
+    s_high_bp = st.checkbox(t["symptom_list"]["high_bp"])
+    s_vomiting = st.checkbox(t["symptom_list"]["vomiting"])
     s_runny = st.checkbox(t["symptom_list"]["runny_nose"])
 
 # ------ Lab Results (NEW SECTION) ------
@@ -352,6 +356,9 @@ def compute_and_store_result():
         int(s_cough),
         int(s_runny),
         int(s_sore),
+        int(s_unexplained_pain),
+        int(s_high_bp),
+        int(s_vomiting),
         int(s_mycn),
         int(s_alk),
         int(s_11q),
@@ -433,7 +440,7 @@ if st.session_state.get("last_result"):
         st.markdown("### 🔬 Prediction Results")
         st.markdown(f"<span class='risk-dot' style='background:{dot_color}'></span> **{res['Risk']}**", unsafe_allow_html=True)
         st.write(f"**Prediction:** {res['Prediction_Text']}")
-        st.write(f'**Probability:** {res["Probability_%"]:.1f}%') # Fixed syntax error here
+        st.write(f'**Probability:** {res["Probability_%"]:.1f}%')
 
         st.markdown("**Suggestions:**")
         st.write(suggestion)

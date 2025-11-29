@@ -44,6 +44,7 @@ translations = {
         "nutshell_title": "🧠 Neuroblastoma in a Nutshell",
         "nutshell_text": "Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system. It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or bulging eyes. Neuroblastoma is often detected at Stage 4 because its aggressive nature allows it to spread, or metastasize, to distant parts of the body, such as the bone marrow, liver, skin, and other organs, before the primary tumor grows large enough to cause noticeable local symptoms.",
         "major_symptoms": "🩺 Major Symptoms",
+        "rarer_symptoms": "🎗️ Rarer Symptoms",
         "additional_symptoms": "➕ Additional Symptoms",
         "lab_results_title": "🔬 Lab Results",
         "symptom_list": {
@@ -107,6 +108,7 @@ translations = {
         "nutshell_title": "🧠 Neuroblastoma en Resumen",
         "nutshell_text": "El neuroblastoma es un cáncer infantil poco común que surge de células nerviosas inmaduras del sistema nervioso simpático. Afecta con mayor frecuencia a bebés y niños pequeños y suele presentarse con una masa abdominal, dolor óseo o ojos abultados. El neuroblastoma suele detectarse en la etapa 4 debido a su naturaleza agresiva, que le permite propagarse (hacer metástasis) a partes distantes del cuerpo antes de que el tumor principal sea lo suficientemente grande como para causar síntomas locales notorios.",
         "major_symptoms": "🩺 Síntomas Principales",
+        "rarer_symptoms": "🎗️ Síntomas más raros",
         "additional_symptoms": "➕ Síntomas Adicionales",
         "lab_results_title": "🔬 Resultados de Laboratorio",
         "symptom_list": {
@@ -170,6 +172,7 @@ translations = {
         "nutshell_title": "🧠 Le Neuroblastome en Bref",
         "nutshell_text": "Le neuroblastome est un cancer pédiatrique rare provenant des cellules nerveuses immatures du système nerveux sympathique. Il touche principalement les nourrissons et les jeunes enfants et se manifeste souvent par une masse abdominale, des douleurs osseuses ou des yeux saillants.",
         "major_symptoms": "🩺 Symptômes Majeurs",
+        "rarer_symptoms": "🎗️ Symptômes plus rares",
         "additional_symptoms": "➕ Symptômes Supplémentaires",
         "lab_results_title": "🔬 Résultats de Laboratoire",
         "symptom_list": {
@@ -304,12 +307,18 @@ with maj_col1:
     s_lump = st.checkbox(t["symptom_list"]["lump"])
     s_abdominal_pain = st.checkbox(t["symptom_list"]["abdominal_pain"])
     s_weight_loss = st.checkbox(t["symptom_list"]["weight_loss"])
-    s_bone_pain = st.checkbox(t["symptom_list"]["bone_pain"])
 with maj_col2:
     s_fatigue = st.checkbox(t["symptom_list"]["fatigue"])
-    s_bulging_eyes = st.checkbox(t["symptom_list"]["bulging_eyes"])
     s_constipation = st.checkbox(t["symptom_list"]["constipation"])
     s_aches = st.checkbox(t["symptom_list"]["aches"])
+
+st.markdown("---")
+st.subheader(t["rarer_symptoms"])
+maj_col1, maj_col2 = st.columns(2)
+with maj_col1:
+    s_bone_pain = st.checkbox(t["symptom_list"]["bone_pain"])
+with maj_col2:
+    s_bulging_eyes = st.checkbox(t["symptom_list"]["bulging_eyes"])
 
 st.markdown("---")
 st.subheader(t["additional_symptoms"])
@@ -317,13 +326,13 @@ add_col1, add_col2, add_col3 = st.columns(3)
 with add_col1:
     s_fever = st.checkbox(t["symptom_list"]["fever"])
     s_cough = st.checkbox(t["symptom_list"]["cough"])
+    s_runny = st.checkbox(t["symptom_list"]["runny_nose"])
 with add_col2:
     s_sore = st.checkbox(t["symptom_list"]["sore_throat"])
     s_unexplained_pain = st.checkbox(t["symptom_list"]["unexplained_pain"])
 with add_col3:
     s_high_bp = st.checkbox(t["symptom_list"]["high_bp"])
     s_vomiting = st.checkbox(t["symptom_list"]["vomiting"])
-    s_runny = st.checkbox(t["symptom_list"]["runny_nose"])
 
 # ------ Lab Results (NEW SECTION) ------
 st.markdown("---")

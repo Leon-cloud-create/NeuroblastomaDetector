@@ -487,5 +487,5 @@ if st.button(t["submit_feedback"]):
         st.warning("Please enter feedback before submitting.")
 
 st.markdown("---")
-st.markdown("<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>", unsafe_allow_html=True)    a 
+st.markdown("<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>", unsafe_allow_html=True)    
 ```

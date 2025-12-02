@@ -28,7 +28,8 @@ st.markdown(
     .footer { text-align:center; color:gray; padding:10px 0; margin-top:18px; }
     .small-muted { color:#6b7280; font-size:13px; }
     </style>
-    """, unsafe_allow_html=True
+    """,
+    unsafe_allow_html=True
 )
 
 # ---------------- Files & constants ----------------
@@ -42,7 +43,7 @@ translations = {
         "title": "🏥 Neuroblastoma Risk Predictor",
         "disclaimer": "**DISCLAIMER:** This tool is for informational and educational purposes only. It is not intended to provide medical advice, diagnosis, or treatment. Always consult a licensed healthcare provider.",
         "nutshell_title": "🧠 Neuroblastoma in a Nutshell",
-        "nutshell_text": "Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system. It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or bulging eyes. Neuroblastoma is often detected at Stage 4 because its aggressive nature allows it to spread, or metastasize, to distant parts of the body, such as the bone marrow, liver, skin, and other organs, before the primary tumor grows large enough to cause noticeable local symptoms.",
+        "nutshell_text": "Neuroblastoma is a rare childhood cancer arising from immature nerve cells of the sympathetic nervous system. It most often affects infants and young children and commonly presents with an abdominal mass, bone pain, or bulging eyes. Neuroblastoma is often detected at Stage 4 because its aggressive nature allows it to spread, or metastasize, to distant parts of the body, such as the bone marrow, liver, skin, and other organs, causing internal and external damage. This website helps to catch Neuroblastoma at early stages by using symptoms, checking for genetic changes, and by looking at scans. We recommend that you check your child's symptoms first and then go to labs or get scans.",
         "major_symptoms": "🩺 Major Symptoms",
         "rarer_symptoms": "🎗️ Rarer Symptoms",
         "additional_symptoms": "➕ Additional Symptoms",
@@ -56,8 +57,6 @@ translations = {
             "bulging_eyes": "Bulging or bruised eyes",
             "constipation": "Constipation",
             "aches": "Aches/Pain (usually in the leg causing limping)",
-            "bone_pain": "Bone Pain (usually followed by swelling, fever, and limping)",
-            "bulging_eyes": "Bulging or bruised eyes",
             "fever": "Fever",
             "cough": "Cough",
             "runny_nose": "Runny/Stuffy nose",
@@ -82,7 +81,6 @@ translations = {
         "store_data": "📦 Do you want your data stored? (will appear in Past Patient Data)",
         "feedback": "🗒️ Feedback",
         "submit_feedback": "Submit Feedback",
-        "name_optional": "Name (optional)",
         "age": "Age (years)",
         "gender": "Gender",
         "male": "Male",
@@ -146,7 +144,6 @@ translations = {
         "store_data": "📦 ¿Desea guardar sus datos? (aparecerán en Datos de Pacientes Anteriores)",
         "feedback": "🗒️ Comentarios",
         "submit_feedback": "Enviar Comentarios",
-        "name_optional": "Nombre (opcional)",
         "age": "Edad (años)",
         "gender": "Género",
         "male": "Masculino",
@@ -210,7 +207,6 @@ translations = {
         "store_data": "📦 Voulez-vous enregistrer les données ? (elles apparaîtront dans Données des Patients)",
         "feedback": "🗒️ Commentaires",
         "submit_feedback": "Soumettre",
-        "name_optional": "Nom (optionnel)",
         "age": "Âge (années)",
         "gender": "Genre",
         "male": "Homme",
@@ -226,14 +222,13 @@ translations = {
         "prediction_results_section": {
             "title": "🔬 Résultats de la Prédiction",
             "prediction": "Prédiction",
-            "probability": "Probabilidad",
+            "probability": "Probabilité",
             "model_confidence": "Confiance du Modèle",
-            "suggestions": "Sugerencias",
+            "suggestions": "Suggestions",
             "confidence_message": "confiant que ce patient présente"
         }
     }
 }
-
 
 # ---------------- Load model & scaler ----------------
 @st.cache_resource
@@ -281,7 +276,8 @@ with st.sidebar:
 
     st.markdown("---")
     st.info(t["fill_patient_note"])
-    patient_name = st.text_input(t["name_optional"], value="", key="patient_name")
+    # Name removed – privacy-friendly
+
     assessment_date = st.date_input(t["assessment_date"], value=datetime.now().date(), key="assessment_date")
     age = st.number_input(t["age"], min_value=0, max_value=120, value=5, step=1, key="age")
     gender = st.selectbox(t["gender"], options=[t["male"], t["female"], t["other"]], key="gender")
@@ -290,8 +286,12 @@ with st.sidebar:
     st.markdown(f"### {t['past_patient_data']}")
     if not st.session_state["patients_df"].empty:
         st.dataframe(st.session_state["patients_df"], use_container_width=True)
-        st.download_button(t["download_all_csv"], data=st.session_state["patients_df"].to_csv(index=False).encode(),
-                           file_name="patients.csv", mime="text/csv")
+        st.download_button(
+            t["download_all_csv"],
+            data=st.session_state["patients_df"].to_csv(index=False).encode(),
+            file_name="patients.csv",
+            mime="text/csv"
+        )
     else:
         st.info("No past patient data yet.")
 
@@ -336,22 +336,41 @@ with add_col3:
     s_high_bp = st.checkbox(t["symptom_list"]["high_bp"])
     s_vomiting = st.checkbox(t["symptom_list"]["vomiting"])
 
-# ------ Lab Results (NEW SECTION) ------
+# ------ Lab Results (UPDATED SECTION) ------
 st.markdown("---")
 st.subheader(t["lab_results_title"])
+
+genetics_not_checked = st.checkbox(
+    "Not checked for genetic changes yet",
+    value=False,
+    help="If checked, the model will ignore MYCN, ALK, 11q, and 17q and only use symptoms."
+)
+
 lab_col1, lab_col2 = st.columns(2)
 with lab_col1:
-    s_mycn = st.checkbox(t["symptom_list"]["mycn"])
-    s_alk = st.checkbox(t["symptom_list"]["alk"])
+    s_mycn = st.checkbox(t["symptom_list"]["mycn"], disabled=genetics_not_checked)
+    s_alk = st.checkbox(t["symptom_list"]["alk"], disabled=genetics_not_checked)
 with lab_col2:
-    s_11q = st.checkbox(t["symptom_list"]["deletion_11q"])
-    s_17q = st.checkbox(t["symptom_list"]["gain_17q"])
+    s_11q = st.checkbox(t["symptom_list"]["deletion_11q"], disabled=genetics_not_checked)
+    s_17q = st.checkbox(t["symptom_list"]["gain_17q"], disabled=genetics_not_checked)
 
 st.markdown("---")
 predict_clicked = st.button(t["predict_button"])
 results_placeholder = st.empty()
 
 def compute_and_store_result():
+    # Genetics handling: if not checked, force genetics to 0 so model effectively uses symptoms only
+    if genetics_not_checked:
+        mycn_val = 0
+        alk_val = 0
+        q11_val = 0
+        q17_val = 0
+    else:
+        mycn_val = int(s_mycn)
+        alk_val = int(s_alk)
+        q11_val = int(s_11q)
+        q17_val = int(s_17q)
+
     features = [
         age,
         gender_to_numeric(gender),
@@ -370,10 +389,10 @@ def compute_and_store_result():
         int(s_unexplained_pain),
         int(s_high_bp),
         int(s_vomiting),
-        int(s_mycn),
-        int(s_alk),
-        int(s_11q),
-        int(s_17q)
+        mycn_val,
+        alk_val,
+        q11_val,
+        q17_val
     ]
 
     X = np.array([features], dtype=float)
@@ -411,13 +430,12 @@ def compute_and_store_result():
         suggestion = t["suggestions_high"]
 
     result = {
-        "Name": patient_name or "(no name)",
         "Date": str(assessment_date),
         "Age": age,
         "Gender": gender,
         "Prediction": pred,
         "Prediction_Text": prediction_text,
-        "Probability_%": round(neuro_prob*100, 2),
+        "Probability_%": round(neuro_prob * 100, 2),
         "Confidence_%": round(confidence, 2),
         "Risk": risk_level
     }
@@ -449,9 +467,12 @@ if st.session_state.get("last_result"):
         st.markdown("---")
 
         st.markdown("### 🔬 Prediction Results")
-        st.markdown(f"<span class='risk-dot' style='background:{dot_color}'></span> **{res['Risk']}**", unsafe_allow_html=True)
+        st.markdown(
+            f"<span class='risk-dot' style='background:{dot_color}'></span> **{res['Risk']}**",
+            unsafe_allow_html=True
+        )
         st.write(f"**Prediction:** {res['Prediction_Text']}")
-        st.write(f'**Probability:** {res["Probability_%"]:.1f}%')
+        st.write(f"**Probability:** {res['Probability_%']:.1f}%")
 
         st.markdown("**Suggestions:**")
         st.write(suggestion)
@@ -479,7 +500,11 @@ if st.session_state.get("last_result"):
 # ---------------- Feedback (above footer) ----------------
 st.markdown("---")
 st.subheader(t["feedback"])
-feedback_text = st.text_area("🗒️ Feedback (optional) — share your thoughts or report issues", height=140, placeholder="Type your feedback here...")
+feedback_text = st.text_area(
+    "🗒️ Feedback (optional) — share your thoughts or report issues",
+    height=140,
+    placeholder="Type your feedback here..."
+)
 if st.button(t["submit_feedback"]):
     if feedback_text.strip():
         st.success("Thanks for your feedback!")
@@ -487,5 +512,10 @@ if st.button(t["submit_feedback"]):
         st.warning("Please enter feedback before submitting.")
 
 st.markdown("---")
-st.markdown("<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: <a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>", unsafe_allow_html=True)    
+st.markdown(
+    "<div class='footer'>© 2025 Neuroblastoma Risk Predictor | Contact: "
+    "<a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>",
+    unsafe_allow_html=True
+)
+  
 

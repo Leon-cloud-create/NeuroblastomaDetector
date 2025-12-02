@@ -5,6 +5,8 @@ import joblib
 import io
 import os
 from datetime import datetime
+from PIL import Image  # for scan handling
+from tensorflow.keras.models import load_model  # adjust if you use another framework
 
 # ---------------- Config & CSS ----------------
 st.set_page_config(page_title="🏥 Neuroblastoma Risk Predictor", layout="wide")
@@ -36,6 +38,9 @@ st.markdown(
 PATIENTS_CSV = "patients.csv"
 MODEL_PATH = "model.pkl"
 SCALER_PATH = "scaler.pkl"
+
+# NEW: imaging model path
+SCAN_MODEL_PATH = "scan_model.h5"  # TODO: change if your imaging model file has a different name
 
 # ---------------- Translations ----------------
 translations = {
@@ -100,7 +105,18 @@ translations = {
             "model_confidence": "Model Confidence",
             "suggestions": "Suggestions",
             "confidence_message": "confident this patient has"
-        }
+        },
+        # NEW imaging strings
+        "scan_section_title": "🖼️ Scan Upload (Optional)",
+        "scan_uploader_label": "Upload a scan image (JPG/PNG) — experimental imaging model",
+        "scan_analyze_button": "🔍 Analyze Scan",
+        "scan_model_not_available": "Imaging model not available on this server.",
+        "scan_probability_label": "Scan model probability of neuroblastoma:",
+        "scan_prediction_label": "Scan model prediction:",
+        "scan_neuro_text": "Neuroblastoma",
+        "scan_non_neuro_text": "No Neuroblastoma",
+        "scan_combined_title": "🧮 Combined (experimental) risk",
+        "scan_combined_note": "This combined risk is experimental and for research/education only. Always discuss results with a doctor."
     },
     "Spanish": {
         "title": "🏥 Predictor de Riesgo de Neuroblastoma",
@@ -163,7 +179,18 @@ translations = {
             "model_confidence": "Confianza del Modelo",
             "suggestions": "Sugerencias",
             "confidence_message": "de confianza en que este paciente tiene"
-        }
+        },
+        # NEW imaging strings
+        "scan_section_title": "🖼️ Carga de Escán (Opcional)",
+        "scan_uploader_label": "Sube una imagen de escán (JPG/PNG) — modelo de imágenes experimental",
+        "scan_analyze_button": "🔍 Analizar Escán",
+        "scan_model_not_available": "El modelo de imágenes no está disponible en este servidor.",
+        "scan_probability_label": "Probabilidad de neuroblastoma según el modelo de escán:",
+        "scan_prediction_label": "Predicción del modelo de escán:",
+        "scan_neuro_text": "Neuroblastoma",
+        "scan_non_neuro_text": "Sin neuroblastoma",
+        "scan_combined_title": "🧮 Riesgo combinado (experimental)",
+        "scan_combined_note": "Este riesgo combinado es experimental y solo para investigación/educación. Siempre consulte los resultados con un médico."
     },
     "French": {
         "title": "🏥 Prédicteur de Risque de Neuroblastome",
@@ -226,7 +253,18 @@ translations = {
             "model_confidence": "Confiance du Modèle",
             "suggestions": "Suggestions",
             "confidence_message": "confiant que ce patient présente"
-        }
+        },
+        # NEW imaging strings
+        "scan_section_title": "🖼️ Téléversement de Scan (Optionnel)",
+        "scan_uploader_label": "Téléversez une image de scan (JPG/PNG) — modèle d’imagerie expérimental",
+        "scan_analyze_button": "🔍 Analyser le Scan",
+        "scan_model_not_available": "Le modèle d’imagerie n’est pas disponible sur ce serveur.",
+        "scan_probability_label": "Probabilité de neuroblastome selon le modèle de scan :",
+        "scan_prediction_label": "Prédiction du modèle de scan :",
+        "scan_neuro_text": "Neuroblastome",
+        "scan_non_neuro_text": "Pas de neuroblastome",
+        "scan_combined_title": "🧮 Risque combiné (expérimental)",
+        "scan_combined_note": "Ce risque combiné est expérimental et uniquement pour la recherche/éducation. Discutez toujours des résultats avec un médecin."
     }
 }
 
@@ -241,7 +279,18 @@ def load_model_and_scaler():
     scaler = joblib.load(SCALER_PATH)
     return model, scaler, None
 
+# NEW: load imaging model
+@st.cache_resource
+def load_scan_model():
+    if not os.path.exists(SCAN_MODEL_PATH):
+        return None, f"Scan model file not found: {SCAN_MODEL_PATH}"
+    # TODO: change this load method if you use PyTorch or another library
+    scan_model = load_model(SCAN_MODEL_PATH)
+    return scan_model, None
+
 model, scaler, load_error = load_model_and_scaler()
+scan_model, scan_load_error = load_scan_model()
+
 if load_error:
     st.error(load_error)
     st.stop()
@@ -267,6 +316,10 @@ if "patients_df" not in st.session_state:
     st.session_state["patients_df"] = load_patients()
 if "last_result" not in st.session_state:
     st.session_state["last_result"] = None
+
+# store last scan result
+if "last_scan_result" not in st.session_state:
+    st.session_state["last_scan_result"] = None
 
 # ---------------- Sidebar ----------------
 with st.sidebar:
@@ -336,7 +389,7 @@ with add_col3:
     s_high_bp = st.checkbox(t["symptom_list"]["high_bp"])
     s_vomiting = st.checkbox(t["symptom_list"]["vomiting"])
 
-# ------ Lab Results (UPDATED SECTION) ------
+# ------ Lab Results ------
 st.markdown("---")
 st.subheader(t["lab_results_title"])
 
@@ -354,6 +407,48 @@ with lab_col2:
     s_11q = st.checkbox(t["symptom_list"]["deletion_11q"], disabled=genetics_not_checked)
     s_17q = st.checkbox(t["symptom_list"]["gain_17q"], disabled=genetics_not_checked)
 
+# ------ Scan Upload Section (NEW) ------
+st.markdown("---")
+st.subheader(t["scan_section_title"])
+
+uploaded_scan = st.file_uploader(
+    t["scan_uploader_label"],
+    type=["jpg", "jpeg", "png"]
+)
+
+if uploaded_scan is not None:
+    st.image(uploaded_scan, caption="Uploaded scan", use_container_width=True)
+    if scan_load_error or scan_model is None:
+        st.warning(t["scan_model_not_available"])
+    else:
+        if st.button(t["scan_analyze_button"]):
+            try:
+                img = Image.open(uploaded_scan).convert("RGB")
+
+                # TODO: adjust preprocessing to match YOUR imaging model
+                img = img.resize((224, 224))
+                img_arr = np.array(img) / 255.0
+                img_arr = np.expand_dims(img_arr, axis=0)  # shape (1, H, W, C)
+
+                # For a 2-class model: [p_no_neuro, p_neuro]
+                scan_probs = scan_model.predict(img_arr)[0]
+                scan_prob_neuro = float(scan_probs[1])
+                scan_pred = int(scan_prob_neuro >= 0.5)
+
+                scan_pred_text = t["scan_neuro_text"] if scan_pred == 1 else t["scan_non_neuro_text"]
+
+                st.write(f"**{t['scan_probability_label']}** {scan_prob_neuro * 100:.1f}%")
+                st.write(f"**{t['scan_prediction_label']}** {scan_pred_text}")
+
+                st.session_state["last_scan_result"] = {
+                    "prob_neuro": scan_prob_neuro,
+                    "pred_text": scan_pred_text
+                }
+
+            except Exception as e:
+                st.error(f"Scan analysis error: {e}")
+
+# ---------------- Prediction button and results ----------------
 st.markdown("---")
 predict_clicked = st.button(t["predict_button"])
 results_placeholder = st.empty()
@@ -444,7 +539,8 @@ def compute_and_store_result():
         "result": result,
         "dot_color": dot_color,
         "suggestion": suggestion,
-        "confidence": confidence
+        "confidence": confidence,
+        "neuro_prob": neuro_prob
     }
 
 if predict_clicked:
@@ -460,6 +556,7 @@ if st.session_state.get("last_result"):
     dot_color = r["dot_color"]
     suggestion = r["suggestion"]
     confidence = r["confidence"]
+    neuro_prob = r["neuro_prob"]
 
     with results_placeholder.container():
         st.markdown(t["risk_ref_title"])
@@ -480,6 +577,17 @@ if st.session_state.get("last_result"):
         st.markdown("**Model confidence:**")
         st.progress(int(confidence))
         st.write(f"{confidence:.2f}% confident this patient has {res['Prediction_Text'].lower()}.")
+
+        # If a scan result exists, show combined (experimental) risk
+        if st.session_state.get("last_scan_result") is not None:
+            scan_res = st.session_state["last_scan_result"]
+            scan_prob_neuro = scan_res["prob_neuro"]
+
+            combined_prob = (neuro_prob + scan_prob_neuro) / 2.0
+            st.markdown("---")
+            st.markdown(f"### {t['scan_combined_title']}")
+            st.write(f"**Combined estimated probability (experimental):** {combined_prob * 100:.1f}%")
+            st.write(t["scan_combined_note"])
 
         # Download CSV
         single_df = pd.DataFrame([res])
@@ -517,5 +625,5 @@ st.markdown(
     "<a href='mailto:leonj062712@gmail.com'>leonj062712@gmail.com</a></div>",
     unsafe_allow_html=True
 )
-  
+
 

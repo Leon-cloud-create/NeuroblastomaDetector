@@ -48,7 +48,7 @@ MODEL_PATH = "model.pkl"
 SCALER_PATH = "scaler.pkl"
 
 # Imaging model path
-SCAN_MODEL_PATH = "neuro-model.keras"  # your new keras format filename
+SCAN_MODEL_PATH = "neuro_model.keras"  # your new keras format filename
 
 # ---------------- Translations (FIXED - COMPLETE) ----------------
 translations = {

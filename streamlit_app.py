@@ -4,6 +4,7 @@ import pandas as pd
 import joblib
 import io
 import os
+import textwrap
 from datetime import datetime
 from PIL import Image  # for scan handling
 
@@ -82,12 +83,29 @@ translations = {
         "risk_mild": "Mild risk", 
         "risk_moderate": "Moderate risk",
         "risk_high": "High risk",
-        "suggestions_low": "• Low risk\n• Routine follow-up may be enough.\n• Monitor for new symptoms.",
-        "suggestions_mild": "• Mild risk\n• Discuss with a pediatrician.\n• Consider basic screening tests.",
-        "suggestions_moderate": "• Moderate risk\n• Specialist evaluation recommended.\n• Imaging and lab tests advised.",
-        "suggestions_high": "• **High risk\n• Urgent specialist evaluation recommended.**\n• Immediate imaging and specialist consult.",
+        "suggestions_low": textwrap.dedent("""\
+    • Low risk
+    • Routine follow-up may be enough.
+    • Monitor for new symptoms.""")
+        "suggestions_mild": textwrap.dedent("""\
+        • Mild risk
+        • Discuss with a pediatrician.
+        • Consider basic screening tests."""),
+        "suggestions_moderate": textwrap.dedent("""\
+        • Moderate risk
+        • Specialist evaluation recommended.
+        • Imaging and lab tests advised."""),
+        "suggestions_high": textwrap.dedent("""\
+        • **High risk**
+        • Urgent specialist evaluation recommended.
+        • Immediate imaging and specialist consult."""),
         "risk_ref_title": "Risk Reference",
-        "risk_ref_text": "These probabilities are estimates based on machine learning patterns and do not replace clinical judgment.\n• Low risk = 0-40%\n• Mild risk = 41-60\n• Moderate risk = 61-80%\n• High risk = 81-100%",
+        "risk_ref_text": textwrap.dedent("""\
+        These probabilities are estimates based on machine learning patterns and do not replace clinical judgment.
+        • Low risk = 0-40%
+        • Mild risk = 41-60
+        • Moderate risk = 61-80%
+        • High risk = 81-100%"""),
         "predict_button": "🚀 Predict Risk",
         "download_csv": "📥 Download this assessment as CSV",
         "download_all_csv": "📥 Download all past data as CSV",

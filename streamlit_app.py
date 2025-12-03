@@ -83,27 +83,31 @@ translations = {
         "risk_mild": "Mild risk", 
         "risk_moderate": "Moderate risk",
         "risk_high": "High risk",
-        "suggestions_low": textwrap.dedent("""\
-    • Low risk
-    • Routine follow-up may be enough.
-    • Monitor for new symptoms.""")
-        "suggestions_mild": textwrap.dedent("""\
+    "suggestions_low": textwrap.dedent("""\
+        • Low risk
+        • Routine follow-up may be enough.
+        • Monitor for new symptoms."""),  # <- ADD COMMA HERE
+    
+    "suggestions_mild": textwrap.dedent("""\     # <- SAME INDENTATION LEVEL
         • Mild risk
         • Discuss with a pediatrician.
         • Consider basic screening tests."""),
-        "suggestions_moderate": textwrap.dedent("""\
+    
+    "suggestions_moderate": textwrap.dedent("""\
         • Moderate risk
         • Specialist evaluation recommended.
         • Imaging and lab tests advised."""),
-        "suggestions_high": textwrap.dedent("""\
+    
+    "suggestions_high": textwrap.dedent("""\
         • **High risk**
         • Urgent specialist evaluation recommended.
         • Immediate imaging and specialist consult."""),
-        "risk_ref_title": "Risk Reference",
-        "risk_ref_text": textwrap.dedent("""\
+    
+    "risk_ref_title": "Risk Reference",
+    "risk_ref_text": textwrap.dedent("""\
         These probabilities are estimates based on machine learning patterns and do not replace clinical judgment.
         • Low risk = 0-40%
-        • Mild risk = 41-60
+        • Mild risk = 41-60%
         • Moderate risk = 61-80%
         • High risk = 81-100%"""),
         "predict_button": "🚀 Predict Risk",

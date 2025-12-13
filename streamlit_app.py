@@ -6,11 +6,10 @@ import io
 import os
 import textwrap
 from datetime import datetime
-from PIL import Image  # for scan handling
+from PIL import Image
 
-# Attempt to import tensorflow.keras, set flag if unavailable
 try:
-    from tensorflow.keras.models import load_model  # for scan handling
+    from tensorflow.keras.models import load_model  
     TENSORFLOW_AVAILABLE = True
 except ImportError:
     load_model = None
@@ -47,8 +46,7 @@ PATIENTS_CSV = "patients.csv"
 MODEL_PATH = "model.pkl"
 SCALER_PATH = "scaler.pkl"
 
-# Imaging model path
-SCAN_MODEL_PATH = "neuro_model.keras"  # your new keras format filename
+SCAN_MODEL_PATH = "neuro_model.keras"  
 
 # ---------------- Translations (FIXED - COMPLETE) ----------------
 translations = {
@@ -86,9 +84,9 @@ translations = {
     "suggestions_low": textwrap.dedent("""\
         • Low risk
         • Routine follow-up may be enough.
-        • Monitor for new symptoms."""),  # <- ADD COMMA HERE
+        • Monitor for new symptoms."""),  
     
-    "suggestions_mild": textwrap.dedent("""\     # <- SAME INDENTATION LEVEL
+    "suggestions_mild": textwrap.dedent("""\     
         • Mild risk
         • Discuss with a pediatrician.
         • Consider basic screening tests."""),

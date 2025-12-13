@@ -78,3 +78,43 @@ git rm --cached neuro_model.keras
 git add neuro_model.keras
 git commit -m "Move model to Git LFS"
 git push origin main
+git status
+git init
+git remote add origin https://github.com/Leon-cloud-create
+git remote add origin https://github.com/Leon-cloud-create/NeuroblastomaDetector.git
+ls
+ls -a
+git remote -v
+git add .
+git rm --cached -r neuro_project
+git rm --cached -r -f neuro_project
+git add neuro_project
+git rm --cached neuro_project
+git rm --cached -r -f neuro_project
+git commit -m "Fix nested repo issue and add updated model"
+git push
+git push --set-upstream origin master
+git remote set-url origin https://github.com/Leon-cloud-create/NeuroblastomaDetector.git
+git push --set-upstream origin master
+git branch
+git checkout main
+git checkout -b main
+git commit -m "Updated model"
+git add .
+git rm -r --cached neuro_project
+git rm -r -f --cached neuro_project
+rm -rf neuro_project/.git
+git commit -m "Fix nested repo and add model"
+git add
+git add .
+git commit -m "Fix nested repo and add model"
+git push -u origin main
+git pull origin main --rebase
+error: failed to push some refs to 'https://github.com/Leon-cloud-create/NeuroblastomaDetector.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details. git pull origin main --rebase
+git pull origin main --rebase
+git push origin main

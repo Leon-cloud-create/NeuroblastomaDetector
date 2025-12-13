@@ -118,3 +118,41 @@ hint: (e.g., 'git pull ...') before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details. git pull origin main --rebase
 git pull origin main --rebase
 git push origin main
+git status
+git init
+git add .
+git commit -m "added new trained model"
+git push -u origin main
+cd ~
+ls
+cd NeuroblastomaDetector
+cd neuro_project
+ls -a
+git add neuro_model.keras
+git commit -m "Add retrained model"
+git pull origin main --rebase
+git add neuro_model.keras
+git commit -m "Add retrained model"
+git add neuro_model.keras
+git commit -m "Add retrained model"
+git add neuro_model.keras
+git push origin main
+cd ~/neuro_project
+mv neuro_project/neuro_model.keras
+mv neuro_project/neuro_model.keras .
+mv neuro_model.keras .
+ls
+git add neuro_model.keras
+git commit -m "Add model to main"
+git pusj origin main
+git push origin main
+git pull origin main --rebase
+git add neuro_model.keras
+git commit -m "Add model to main"
+git push origin main
+git pull origin main --rebase
+git add neuro_model.keras
+git commit -m "Add model to main"
+git add neuro_model.keras
+git commit -m "Add model to main"
+git push origin main --force

@@ -156,3 +156,101 @@ git commit -m "Add model to main"
 git add neuro_model.keras
 git commit -m "Add model to main"
 git push origin main --force
+git init
+git add neuro_model.keras
+git commit -m "Add retrained model to main"
+git push origin main
+git pull origin main --rebase
+git add neuro_model.keras
+git commit -m "Added trained model"
+git add -u
+git commit -m "Remove neuro_project"
+git pull origin main --rebase
+git push origin main
+git add neuro_model.keras
+git commit -m "Update retrained model"
+git push origin main
+git add neuro_model.keras
+git commit -m "Add model"
+git push origin main
+git log --oneline --decorate -5
+pwd
+ls
+git status
+cd ~
+rm -rf NeuroblastomaDetector
+git clone https://github.com/Leon-cloud-create/NeuroblastomaDetector.git
+cd NeuroblastomaDetector
+ls -a
+cp ~/neuro_model.keras .
+ls
+git add -f neuro_model.keras
+git commit -m "Upload updated trained model"
+git push origin main
+ls -lh
+git ls-files | grep neuro_model
+git add -f neuro_model.keras
+git commit -m "Add model"
+git push origin main
+git add -f neuro_model.keras
+git commit -m "Add trained model"
+git push origin main
+git status
+giuyg
+sdfg
+git ls-files | grep neuro_model
+git log --oneline -- neuro_model.keras
+git show HEAD:neuro_model.keras > /tmp/test.keras
+ls -lh /tmp/test.keras
+git add "neuro_model.keras"
+git commit -m "Yes"
+git push origin main 
+git status
+touch neuro_model.keras
+git status
+touch neuro_model.keras
+git status
+ls -lh neuro_model.keras
+git status
+git init
+git add neuro_model.keras
+git commit -m "Add model"
+git add -f neuro_model.keras
+git commit -m "Add retrained model"
+pwd
+ls
+cd NeuroblastomaDetector
+ls -a
+ls -lh
+git add -f neuro_model.keras
+git commit -m "Add retrained model"
+git push origin main
+cd ~
+rm -rf NeuroblastomaDetector
+git clone https://github.com/Leon-cloud-create/NeuroblastomaDetector.git
+cd NeuroblastomaDetector
+ls -a
+find ~ -name "neuro_model.keras"
+cp /NeuroblastomaDetector/neuro_model.keras
+cp /NeuroblastomaDetector/to/neuro_model.keras
+git add neuro_model.keras
+git commit -m "yes"
+git status
+ls
+git status
+git init
+ls -lh neuro_model.keras
+git status
+git add neuro_model.keras
+git commit -m "Update trained neuroblastoma model"
+hit init
+git init
+git add neuro_model.keras
+git commit -m "Add model again"
+git add neuro_model.keras
+git commit -a "Yes"
+ls -lh neuro_model.keras
+git init
+git status
+git add neuro_model.keras
+git commit -a

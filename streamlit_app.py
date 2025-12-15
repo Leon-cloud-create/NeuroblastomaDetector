@@ -75,8 +75,7 @@ translations = {
         "scan_non_neuro_text": "Scan does not suggest neuroblastoma",
         "scan_probability_label": "Scan neuroblastoma probability:",
         "scan_prediction_label": "Scan prediction:",
-        "scan_combined_title": "Combined scan + symptoms risk",
-        "scan_combined_note": "*This combined probability is experimental and should be interpreted cautiously.*",
+        "final_combined": "Combined scan + symptoms risk",
         "risk_low": "Low risk",
         "risk_mild": "Mild risk", 
         "risk_moderate": "Moderate risk",
@@ -161,8 +160,7 @@ translations = {
         "scan_non_neuro_text": "El escaneo no sugiere neuroblastoma",
         "scan_probability_label": "Probabilidad de neuroblastoma del escaneo:",
         "scan_prediction_label": "Predicción del escaneo:",
-        "scan_combined_title": "Riesgo combinado escaneo + síntomas",
-        "scan_combined_note": "*Esta probabilidad combinada es experimental y debe interpretarse con precaución.*",
+        "final_combined": "Riesgo combinado de escaneo + síntomas",
         "risk_low": "Bajo riesgo",
         "risk_mild": "Riesgo leve",
         "risk_moderate": "Riesgo moderado",
@@ -226,8 +224,7 @@ translations = {
         "scan_non_neuro_text": "Scanner ne suggère pas neuroblastome",
         "scan_probability_label": "Probabilité neuroblastome scanner:",
         "scan_prediction_label": "Prédiction scanner:",
-        "scan_combined_title": "Risque combiné scanner + symptômes",
-        "scan_combined_note": "*Cette probabilité combinée est expérimentale et doit être interprétée avec prudence.*",
+        "final_combined": "Échelle de risque combinée + symptômes",
         "risk_low": "Faible risque",
         "risk_mild": "Risque léger",
         "risk_moderate": "Risque modéré",
@@ -405,55 +402,13 @@ with lab_col2:
     s_11q = st.checkbox(t["symptom_list"]["deletion_11q"], disabled=genetics_not_checked)
     s_17q = st.checkbox(t["symptom_list"]["gain_17q"], disabled=genetics_not_checked)
 
-# ------ Scan Upload Section (NEW) ------
-st.markdown("---")
-st.subheader(t["scan_section_title"])
-
-uploaded_scan = st.file_uploader(
-    t["scan_uploader_label"],
-    type=["jpg", "jpeg", "png"]
-)
-
-if uploaded_scan is not None:
-    st.image(uploaded_scan, caption="Uploaded scan", use_container_width=True)
-
-    if not TENSORFLOW_AVAILABLE or scan_load_error or scan_model is None:
-        st.warning(t["scan_model_not_available"])
-    else:
-        if st.button(t["scan_analyze_button"]):
-            try:
-                img = Image.open(uploaded_scan).convert("RGB")
-
-                # Adjust preprocessing to match YOUR imaging model
-                img = img.resize((224, 224))
-                img_arr = np.array(img) / 255.0
-                img_arr = np.expand_dims(img_arr, axis=0)  # shape (1, H, W, C)
-
-                # For a 2-class model: [p_no_neuro, p_neuro]
-                scan_probs = scan_model.predict(img_arr)[0]
-                scan_prob_neuro = float(scan_probs[1])
-                scan_pred = int(scan_prob_neuro >= 0.5)
-
-                scan_pred_text = t["scan_neuro_text"] if scan_pred == 1 else t["scan_non_neuro_text"]
-
-                st.write(f"**{t['scan_probability_label']}** {scan_prob_neuro * 100:.1f}%")
-                st.write(f"**{t['scan_prediction_label']}** {scan_pred_text}")
-
-                st.session_state["last_scan_result"] = {
-                    "prob_neuro": scan_prob_neuro,
-                    "pred_text": scan_pred_text
-                }
-
-            except Exception as e:
-                st.error(f"Scan analysis error: {e}")
-
 # ---------------- Prediction button and results ----------------
 st.markdown("---")
 predict_clicked = st.button(t["predict_button"])
 results_placeholder = st.empty()
 
 def compute_and_store_result():
-    # Genetics handling: if not checked, force genetics to 0 so model effectively uses symptoms only
+
     if genetics_not_checked:
         mycn_val = 0
         alk_val = 0
@@ -577,16 +532,6 @@ if st.session_state.get("last_result"):
         st.progress(int(confidence))
         st.write(f"{confidence:.2f}% confident this patient has {res['Prediction_Text'].lower()}.")
 
-        # If a scan result exists and TensorFlow is available, show combined (experimental) risk
-        if TENSORFLOW_AVAILABLE and st.session_state.get("last_scan_result") is not None:
-            scan_res = st.session_state["last_scan_result"]
-            scan_prob_neuro = scan_res["prob_neuro"]
-
-            combined_prob = (neuro_prob + scan_prob_neuro) / 2.0
-            st.markdown("---")
-            st.markdown(f"### {t['scan_combined_title']}")
-            st.write(f"**Combined estimated probability (experimental):** {combined_prob * 100:.1f}%")
-            st.write(t["scan_combined_note"])
 
         # Download CSV
         single_df = pd.DataFrame([res])
@@ -603,6 +548,87 @@ if st.session_state.get("last_result"):
             save_patient_row(res)
             st.success("✅ Data stored.")
             st.session_state["patients_df"] = load_patients()
+
+# ------ Scan Upload Section (NEW) ------
+st.markdown("---")
+st.subheader(t["scan_section_title"])
+
+uploaded_scan = st.file_uploader(
+    t["scan_uploader_label"],
+    type=["jpg", "jpeg", "png"]
+)
+
+if uploaded_scan is not None:
+    st.image(uploaded_scan, caption="Uploaded scan", use_container_width=True)
+
+    if not TENSORFLOW_AVAILABLE or scan_load_error or scan_model is None:
+        st.warning(t["scan_model_not_available"])
+    else:
+        if st.button(t["scan_analyze_button"]):
+            try:
+                img = Image.open(uploaded_scan).convert("RGB")
+
+                # Adjust preprocessing to match YOUR imaging model
+                img = img.resize((224, 224))
+                img_arr = np.array(img) / 255.0
+                img_arr = np.expand_dims(img_arr, axis=0)  # shape (1, H, W, C)
+
+                # For a 2-class model: [p_no_neuro, p_neuro]
+                scan_probs = scan_model.predict(img_arr)[0]
+                scan_prob_neuro = float(scan_probs[1])
+                scan_pred = int(scan_prob_neuro >= 0.5)
+
+                scan_pred_text = t["scan_neuro_text"] if scan_pred == 1 else t["scan_non_neuro_text"]
+
+                st.write(f"**{t['scan_probability_label']}** {scan_prob_neuro * 100:.1f}%")
+                st.write(f"**{t['scan_prediction_label']}** {scan_pred_text}")
+
+                st.session_state["last_scan_result"] = {
+                    "prob_neuro": scan_prob_neuro,
+                    "pred_text": scan_pred_text
+                }
+
+            except Exception as e:
+                st.error(f"Scan analysis error: {e}")
+
+#----------------- Combined Result -----------------------
+st.markdown("---")
+final_combined = st.button("🧬 Final Combined Risk")
+
+def compute_final_combined_result():
+    if st.session_state.get("last_result") is None:
+        st.warning("Please run symptom-based prediction first.")
+        return
+
+    if st.session_state.get("last_scan_result") is None:
+        st.warning("Please analyze a scan before combining results.")
+        return
+
+    neuro_prob = st.session_state["last_result"]["neuro_prob"]
+    scan_prob = st.session_state["last_scan_result"]["prob_neuro"]
+
+    combined_prob = (neuro_prob + scan_prob) / 2.0
+
+    if combined_prob <= 0.34:
+        risk = t["risk_low"]
+        color = "#2ca02c"
+    elif combined_prob <= 0.50:
+        risk = t["risk_mild"]
+        color = "#ffc107"
+    elif combined_prob <= 0.74:
+        risk = t["risk_moderate"]
+        color = "#f0ad4e"
+    else:
+        risk = t["risk_high"]
+        color = "#d62728"
+
+    st.markdown("### 🧬 Final Combined Risk Assessment")
+    st.markdown(
+        f"<span class='risk-dot' style='background:{color}'></span> **{risk}**",
+        unsafe_allow_html=True
+    )
+    st.write(f"**Combined probability:** {combined_prob * 100:.1f}%")
+    st.write("*This combined result integrates symptom-based AI prediction with scan-based analysis and is experimental.*")
 
 # ---------------- Feedback (above footer) ----------------
 st.markdown("---")

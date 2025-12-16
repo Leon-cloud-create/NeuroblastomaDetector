@@ -553,14 +553,14 @@ if st.session_state.get("last_result"):
 st.markdown("---")
 st.subheader(t["scan_section_title"])
 
-st.markdown("---")
-predict_clicked = st.button(t["scan_analyze_button"])
-results_placeholder = st.empty()
-
 uploaded_scan = st.file_uploader(
     t["scan_uploader_label"],
     type=["jpg", "jpeg"]
 )
+
+st.markdown("---")
+predict_clicked = st.button(t["scan_analyze_button"])
+results_placeholder = st.empty()
 
 if uploaded_scan is not None:
     st.image(uploaded_scan, caption="Uploaded scan", use_container_width=True)

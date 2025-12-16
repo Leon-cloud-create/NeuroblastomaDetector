@@ -632,10 +632,12 @@ def compute_final_combined_result():
         unsafe_allow_html=True
     )
     st.write(f"**Combined probability:** {combined_prob * 100:.1f}%")
-    st.write("*This combined result integrates symptom-based AI prediction with scan-based analysis and is experimental.*")
-  
-if final_combined_clicked:
-compute_final_combined_result()
+    st.write(
+        "*This combined result integrates symptom-based AI prediction with scan-based analysis and is experimental.*"
+    )
+
+if final_combined:
+    compute_final_combined_result()
 
 # ---------------- Feedback (above footer) ----------------
 st.markdown("---")

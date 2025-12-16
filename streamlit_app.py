@@ -568,7 +568,7 @@ if uploaded_scan is not None:
     if not TENSORFLOW_AVAILABLE or scan_load_error or scan_model is None:
         st.warning(t["scan_model_not_available"])
     else:
-        if st.button(t["scan_analyze_button"]):
+        if st.button(t["scan_analyze_button"], key="scan_analyze_btn"):
             try:
                 img = Image.open(uploaded_scan).convert("RGB")
 

@@ -316,6 +316,9 @@ if "last_result" not in st.session_state:
     st.session_state["last_result"] = None
 if "last_scan_result" not in st.session_state:
     st.session_state["last_scan_result"] = None
+    
+if "run_scan" not in st.session_state:
+    st.session_state["run_scan"] = False
 
 # ---------------- Sidebar (MOVED UP - DEFINES LANG EARLY) ----------------
 with st.sidebar:
@@ -550,7 +553,6 @@ if st.session_state.get("last_result"):
             st.session_state["patients_df"] = load_patients()
 
 # ------ Scan Upload Section ------
-
 st.markdown("---")
 st.subheader(t["scan_section_title"])
 
@@ -569,6 +571,8 @@ if uploaded_scan is not None:
         if st.button(t["scan_analyze_button"], key="scan_analyze"):
             st.session_state["run_scan"] = True
 
+
+# 🔴 THIS MUST BE OUTSIDE THE FIRST if-block
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
         img = Image.open(uploaded_scan).convert("RGB")
@@ -593,6 +597,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
             "pred_text": scan_pred_text
         }
 
+        # ✅ IMPORTANT: reset so it only runs once
         st.session_state["run_scan"] = False
 
     except Exception as e:

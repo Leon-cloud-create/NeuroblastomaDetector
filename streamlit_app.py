@@ -549,51 +549,54 @@ if st.session_state.get("last_result"):
             st.success("✅ Data stored.")
             st.session_state["patients_df"] = load_patients()
 
-# ------ Scan Upload Section (NEW) ------
+# ------ Scan Upload Section ------
+
 st.markdown("---")
 st.subheader(t["scan_section_title"])
 
 uploaded_scan = st.file_uploader(
     t["scan_uploader_label"],
-    type=["jpg", "jpeg"]
+    type=["jpg", "jpeg"],
+    key="scan_uploader"
 )
-
-st.markdown("---")
-predict_clicked = st.button(t["scan_analyze_button"])
-results_placeholder = st.empty()
 
 if uploaded_scan is not None:
     st.image(uploaded_scan, caption="Uploaded scan", use_container_width=True)
 
-    if not TENSORFLOW_AVAILABLE or scan_load_error or scan_model is None:
+    if not TENSORFLOW_AVAILABLE or scan_model is None:
         st.warning(t["scan_model_not_available"])
     else:
-        if st.button(t["scan_analyze_button"], key="scan_analyze_btn"):
-            try:
-                img = Image.open(uploaded_scan).convert("RGB")
+        if st.button(t["scan_analyze_button"], key="scan_analyze"):
+            st.session_state["run_scan"] = True
 
-                # Adjust preprocessing to match YOUR imaging model
-                img = img.resize((224, 224))
-                img_arr = np.array(img) / 255.0
-                img_arr = np.expand_dims(img_arr, axis=0)  # shape (1, H, W, C)
+if st.session_state.get("run_scan", False) and uploaded_scan is not None:
+    try:
+        img = Image.open(uploaded_scan).convert("RGB")
+        img = img.resize((224, 224))
+        img_arr = np.array(img) / 255.0
+        img_arr = np.expand_dims(img_arr, axis=0)
 
-                # For a 2-class model: [p_no_neuro, p_neuro]
-                scan_probs = scan_model.predict(img_arr)[0]
-                scan_prob_neuro = float(scan_probs[1])
-                scan_pred = int(scan_prob_neuro >= 0.5)
+        scan_probs = scan_model.predict(img_arr)[0]
+        scan_prob_neuro = float(scan_probs[1])
 
-                scan_pred_text = t["scan_neuro_text"] if scan_pred == 1 else t["scan_non_neuro_text"]
+        scan_pred_text = (
+            t["scan_neuro_text"]
+            if scan_prob_neuro >= 0.5
+            else t["scan_non_neuro_text"]
+        )
 
-                st.write(f"**{t['scan_probability_label']}** {scan_prob_neuro * 100:.1f}%")
-                st.write(f"**{t['scan_prediction_label']}** {scan_pred_text}")
+        st.write(f"**{t['scan_probability_label']}** {scan_prob_neuro * 100:.1f}%")
+        st.write(f"**{t['scan_prediction_label']}** {scan_pred_text}")
 
-                st.session_state["last_scan_result"] = {
-                    "prob_neuro": scan_prob_neuro,
-                    "pred_text": scan_pred_text
-                }
+        st.session_state["last_scan_result"] = {
+            "prob_neuro": scan_prob_neuro,
+            "pred_text": scan_pred_text
+        }
 
-            except Exception as e:
-                st.error(f"Scan analysis error: {e}")
+        st.session_state["run_scan"] = False
+
+    except Exception as e:
+        st.error(f"Scan analysis error: {e}")
 
 #----------------- Combined Result -----------------------
 st.markdown("---")

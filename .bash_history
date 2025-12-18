@@ -254,3 +254,13 @@ git init
 git status
 git add neuro_model.keras
 git commit -a
+git init
+[200~git commit -am "Update trained neuroblastoma model"
+~
+git commit -am "Update trained neuroblastoma model"
+git add neuro_model.keras
+git commit -am "Update trained neuroblastoma model"
+git push origin main
+git add neuro_model.keras
+git commit -am "Update trained neuroblastoma model"
+git push origin main

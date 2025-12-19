@@ -11,15 +11,15 @@ cp /path/to/your-57mb-model.h5
 [200~git --version
 ~
 git --version
-cd ~/model.keras
+cd ~/NM.keras
 c
 ls
 pwd 
 pwd
 ls
 pwd ls
-cd ~/model.keras                                     
-find ~ -name "model.keras" 2>/dev/null
+cd ~/NM.keras                                     
+find ~ -name "NM.keras" 2>/dev/null
 
 
 
@@ -28,11 +28,11 @@ find ~ -name "model.keras" 2>/dev/null
 
 
 
-find ~ -name "model.keras" 2>/dev/null
+find ~ -name "NM.keras" 2>/dev/null
 [200~cd /mnt/chromeos/MyFiles/ai-model
-~cd /mnt/chromeos/MyFiles/model.keras
-cd /mnt/chromeos/MyFiles/model.keras
-cd /mnt/chromeos/MyFiles/Downloads/model.keras
+~cd /mnt/chromeos/MyFiles/NM.keras
+cd /mnt/chromeos/MyFiles/NM.keras
+cd /mnt/chromeos/MyFiles/Downloads/NM.keras
 cd /mnt/chromeos/MyFiles/Downloads/neuro_model.kera
 cd /mnt/chromeos/MyFiles/Downloads
 ls /mnt/chromeos
@@ -40,19 +40,19 @@ ls /mnt/chromeos/Myfiles/Downloads
 ls /mnt/chromeos/MyFiles/Downloads
 pwd
 mkdir neuro_project
-mv model.keras neuro_project/
-find ~ -maxdepth 3 -name "model.keras"
+mv NM.keras neuro_project/
+find ~ -maxdepth 3 -name "NM.keras"
 cd ~ ls
 cd
 cd ~ ls
 cd ~
 ls
-[200~mv model.keras neuro_project/
+[200~mv NM.keras neuro_project/
 ~
-mv model.keras neuro_project/
+mv NM.keras neuro_project/
 cd ~
 ls
-mv model.keras neuro_project/
+mv NM.keras neuro_project/
 cd neuro_project
 git init
 git add .
@@ -79,8 +79,8 @@ git lfs install
 git lfs track "*.keras"
 git add .gitattributes
 git commit -m "Track .keras file with Git LFS"
-git rm --cached model.keras
-git add model.keras
+git rm --cached NM.keras
+git add NM.keras
 git commit -m "Move model to Git LFS"
 git push origin main
 git status
@@ -133,49 +133,49 @@ ls
 cd NeuroblastomaDetector
 cd neuro_project
 ls -a
-git add model.keras
+git add NM.keras
 git commit -m "Add retrained model"
 git pull origin main --rebase
-git add model.keras
+git add NM.keras
 git commit -m "Add retrained model"
-git add model.keras
+git add NM.keras
 git commit -m "Add retrained model"
-git add model.keras
+git add NM.keras
 git push origin main
 cd ~/neuro_project
-mv neuro_project/model.keras
-mv neuro_project/model.keras .
-mv model.keras .
+mv neuro_project/NM.keras
+mv neuro_project/NM.keras .
+mv NM.keras .
 ls
-git add model.keras
+git add NM.keras
 git commit -m "Add model to main"
 git pusj origin main
 git push origin main
 git pull origin main --rebase
-git add model.keras
+git add NM.keras
 git commit -m "Add model to main"
 git push origin main
 git pull origin main --rebase
-git add model.keras
+git add NM.keras
 git commit -m "Add model to main"
-git add model.keras
+git add NM.keras
 git commit -m "Add model to main"
 git push origin main --force
 git init
-git add model.keras
+git add NM.keras
 git commit -m "Add retrained model to main"
 git push origin main
 git pull origin main --rebase
-git add model.keras
+git add NM.keras
 git commit -m "Added trained model"
 git add -u
 git commit -m "Remove neuro_project"
 git pull origin main --rebase
 git push origin main
-git add model.keras
+git add NM.keras
 git commit -m "Update retrained model"
 git push origin main
-git add model.keras
+git add NM.keras
 git commit -m "Add model"
 git push origin main
 git log --oneline --decorate -5
@@ -187,47 +187,47 @@ rm -rf NeuroblastomaDetector
 git clone https://github.com/Leon-cloud-create/NeuroblastomaDetector.git
 cd NeuroblastomaDetector
 ls -a
-cp ~/model.keras .
+cp ~/NM.keras .
 ls
-git add -f model.keras
+git add -f NM.keras
 git commit -m "Upload updated trained model"
 git push origin main
 ls -lh
 git ls-files | grep neuro_model
-git add -f model.keras
+git add -f NM.keras
 git commit -m "Add model"
 git push origin main
-git add -f model.keras
+git add -f NM.keras
 git commit -m "Add trained model"
 git push origin main
 git status
 giuyg
 sdfg
 git ls-files | grep neuro_model
-git log --oneline -- model.keras
-git show HEAD:model.keras > /tmp/test.keras
+git log --oneline -- NM.keras
+git show HEAD:NM.keras > /tmp/test.keras
 ls -lh /tmp/test.keras
-git add "model.keras"
+git add "NM.keras"
 git commit -m "Yes"
 git push origin main 
 git status
-touch model.keras
+touch NM.keras
 git status
-touch model.keras
+touch NM.keras
 git status
-ls -lh model.keras
+ls -lh NM.keras
 git status
 git init
-git add model.keras
+git add NM.keras
 git commit -m "Add model"
-git add -f model.keras
+git add -f NM.keras
 git commit -m "Add retrained model"
 pwd
 ls
 cd NeuroblastomaDetector
 ls -a
 ls -lh
-git add -f model.keras
+git add -f NM.keras
 git commit -m "Add retrained model"
 git push origin main
 cd ~
@@ -235,27 +235,28 @@ rm -rf NeuroblastomaDetector
 git clone https://github.com/Leon-cloud-create/NeuroblastomaDetector.git
 cd NeuroblastomaDetector
 ls -a
-find ~ -name "model.keras"
-cp /NeuroblastomaDetector/model.keras
-cp /NeuroblastomaDetector/to/model.keras
-git add model.keras
+find ~ -name "NM.keras"
+cp /NeuroblastomaDetector/NM.keras
+cp /NeuroblastomaDetector/to/NM.keras
+git add NM.keras
 git commit -m "yes"
 git status
 ls
 git status
 git init
-ls -lh model.keras
+ls -lh NM.keras
 git status
-git add model.keras
+git add NM.keras
 git commit -m "Update trained neuroblastoma model"
 hit init
 git init
-git add model.keras
+git add NM.keras
 git commit -m "Add model again"
-git add model.keras
+git add NM.keras
 git commit -a "Yes"
-ls -lh model.keras
+ls -lh NM.keras
 git init
 git status
-git add model.keras
+git add NM.keras
 git commit -a
+

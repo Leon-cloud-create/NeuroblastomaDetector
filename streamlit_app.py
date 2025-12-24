@@ -572,7 +572,6 @@ if uploaded_scan is not None:
             st.session_state["run_scan"] = True
 
 
-# 🔴 THIS MUST BE OUTSIDE THE FIRST if-block
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
         img = Image.open(uploaded_scan).convert("RGB")
@@ -582,6 +581,40 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
 
         scan_probs = scan_model.predict(img_arr)[0]
         scan_prob_neuro = float(scan_probs[1])
+        # Scan-based risk & suggestions
+if scan_prob_neuro <= 0.34:
+    scan_risk = t["risk_low"]
+    scan_color = "#2ca02c"
+    scan_suggestion = (
+        "• Scan appears low risk.\n"
+        "• Continue routine monitoring.\n"
+        "• Follow up if symptoms develop."
+    )
+elif scan_prob_neuro <= 0.50:
+    scan_risk = t["risk_mild"]
+    scan_color = "#ffc107"
+    scan_suggestion = (
+        "• Mild imaging risk detected.\n"
+        "• Discuss results with a pediatrician.\n"
+        "• Consider follow-up imaging if symptoms persist."
+    )
+elif scan_prob_neuro <= 0.74:
+    scan_risk = t["risk_moderate"]
+    scan_color = "#f0ad4e"
+    scan_suggestion = (
+        "• Moderate imaging risk detected.\n"
+        "• Specialist evaluation recommended.\n"
+        "• Additional imaging or labs advised."
+    )
+else:
+    scan_risk = t["risk_high"]
+    scan_color = "#d62728"
+    scan_suggestion = (
+        "• HIGH imaging risk detected.\n"
+        "• Urgent specialist evaluation recommended.\n"
+        "• Immediate diagnostic imaging advised."
+    )
+
 
         scan_pred_text = (
             t["scan_neuro_text"]
@@ -592,12 +625,19 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         st.write(f"**{t['scan_probability_label']}** {scan_prob_neuro * 100:.1f}%")
         st.write(f"**{t['scan_prediction_label']}** {scan_pred_text}")
 
+        st.markdown(
+            f"<span class='risk-dot' style='background:{scan_color}'></span> **{scan_risk}**",
+            unsafe_allow_html=True
+        )
+        st.markdown("**Scan-based suggestions:**")
+        st.write(scan_suggestion)
+
+
         st.session_state["last_scan_result"] = {
             "prob_neuro": scan_prob_neuro,
             "pred_text": scan_pred_text
         }
 
-        # ✅ IMPORTANT: reset so it only runs once
         st.session_state["run_scan"] = False
 
     except Exception as e:

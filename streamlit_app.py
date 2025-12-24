@@ -632,6 +632,14 @@ else:
         st.markdown("**Scan-based suggestions:**")
         st.write(scan_suggestion)
 
+        st.session_state["last_scan_result"] = {
+            "prob_neuro": scan_prob_neuro,
+            "pred_text": scan_pred_text,
+            "risk": scan_risk,
+            "color": scan_color,
+            "suggestion": scan_suggestion
+        }
+
 
         st.session_state["last_scan_result"] = {
             "prob_neuro": scan_prob_neuro,

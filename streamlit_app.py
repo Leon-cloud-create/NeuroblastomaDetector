@@ -571,86 +571,46 @@ if uploaded_scan is not None:
         if st.button(t["scan_analyze_button"], key="scan_analyze"):
             st.session_state["run_scan"] = True
 
-
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
+        # Load & preprocess image
         img = Image.open(uploaded_scan).convert("RGB")
         img = img.resize((224, 224))
         img_arr = np.array(img) / 255.0
         img_arr = np.expand_dims(img_arr, axis=0)
 
+        # Model prediction
         scan_probs = scan_model.predict(img_arr)[0]
         scan_prob_neuro = float(scan_probs[1])
 
-    except Exception as e:
-        st.error(f"Scan analysis error: {e
-                                        
-if scan_prob_neuro <= 0.34:
-    scan_risk = t["risk_low"]
-    scan_color = "#2ca02c"
-    scan_suggestion = (
-        "• Scan appears low risk.\n"
-        "• Continue routine monitoring.\n"
-        "• Follow up if symptoms develop."
-    )
-elif scan_prob_neuro <= 0.50:
-    scan_risk = t["risk_mild"]
-    scan_color = "#ffc107"
-    scan_suggestion = (
-        "• Mild imaging risk detected.\n"
-        "• Discuss results with a pediatrician.\n"
-        "• Consider follow-up imaging if symptoms persist."
-    )
-elif scan_prob_neuro <= 0.74:
-    scan_risk = t["risk_moderate"]
-    scan_color = "#f0ad4e"
-    scan_suggestion = (
-        "• Moderate imaging risk detected.\n"
-        "• Specialist evaluation recommended.\n"
-        "• Additional imaging or labs advised."
-    )
-else:
-    scan_risk = t["risk_high"]
-    scan_color = "#d62728"
-    scan_suggestion = (
-        "• HIGH imaging risk detected.\n"
-        "• Urgent specialist evaluation recommended.\n"
-        "• Immediate diagnostic imaging advised."
-    )
+        # Risk logic
+        if scan_prob_neuro <= 0.34:
+            scan_risk = t["risk_low"]
+            scan_color = "#2ca02c"
+            scan_suggestion = "Low imaging risk. Continue monitoring."
+        elif scan_prob_neuro <= 0.50:
+            scan_risk = t["risk_mild"]
+            scan_color = "#ffc107"
+            scan_suggestion = "Mild imaging risk. Consider follow-up."
+        elif scan_prob_neuro <= 0.74:
+            scan_risk = t["risk_moderate"]
+            scan_color = "#f0ad4e"
+            scan_suggestion = "Moderate imaging risk. Specialist review advised."
+        else:
+            scan_risk = t["risk_high"]
+            scan_color = "#d62728"
+            scan_suggestion = "High imaging risk. Urgent evaluation recommended."
 
-
-        scan_pred_text = (
-            t["scan_neuro_text"]
-            if scan_prob_neuro >= 0.5
-            else t["scan_non_neuro_text"]
-        )
-
-        st.write(f"**{t['scan_probability_label']}** {scan_prob_neuro * 100:.1f}%")
-        st.write(f"**{t['scan_prediction_label']}** {scan_pred_text}")
-
-        st.markdown(
-            f"<span class='risk-dot' style='background:{scan_color}'></span> **{scan_risk}**",
-            unsafe_allow_html=True
-        )
-        st.markdown("**Scan-based suggestions:**")
-        st.write(scan_suggestion)
-
+        # Store results for combined analysis
         st.session_state["last_scan_result"] = {
             "prob_neuro": scan_prob_neuro,
-            "pred_text": scan_pred_text,
             "risk": scan_risk,
             "color": scan_color,
             "suggestion": scan_suggestion
         }
 
-
-        st.session_state["last_scan_result"] = {
-            "prob_neuro": scan_prob_neuro,
-            "pred_text": scan_pred_text
-        }
-
-        st.session_state["run_scan"] = False
-
+    except Exception as e:
+        st.error(f"Scan analysis failed: {e}")
 
 #----------------- Combined Result -----------------------
 st.markdown("---")

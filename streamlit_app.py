@@ -581,7 +581,10 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
 
         scan_probs = scan_model.predict(img_arr)[0]
         scan_prob_neuro = float(scan_probs[1])
-        # Scan-based risk & suggestions
+
+    except Exception as e:
+        st.error(f"Scan analysis error: {e
+                                        
 if scan_prob_neuro <= 0.34:
     scan_risk = t["risk_low"]
     scan_color = "#2ca02c"
@@ -648,8 +651,6 @@ else:
 
         st.session_state["run_scan"] = False
 
-    except Exception as e:
-        st.error(f"Scan analysis error: {e}")
 
 #----------------- Combined Result -----------------------
 st.markdown("---")

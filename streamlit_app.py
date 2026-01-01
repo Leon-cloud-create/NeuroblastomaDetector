@@ -46,7 +46,7 @@ PATIENTS_CSV = "patients.csv"
 MODEL_PATH = "model.pkl"
 SCALER_PATH = "scaler.pkl"
 
-SCAN_MODEL_PATH = "NeuroM.keras"  
+SCAN_MODEL_PATH = "neuro_model.keras"  
 
 # ---------------- Translations (FIXED - COMPLETE) ----------------
 translations = {

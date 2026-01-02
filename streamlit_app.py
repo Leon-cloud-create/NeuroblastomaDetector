@@ -571,6 +571,7 @@ if uploaded_scan is not None:
         if st.button(t["scan_analyze_button"], key="scan_analyze"):
             st.session_state["run_scan"] = True
 
+
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
         # Load & preprocess image
@@ -601,13 +602,25 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
             scan_color = "#d62728"
             scan_suggestion = "High imaging risk. Urgent evaluation recommended."
 
-        # Store results for combined analysis
+        # Store results
         st.session_state["last_scan_result"] = {
             "prob_neuro": scan_prob_neuro,
             "risk": scan_risk,
             "color": scan_color,
             "suggestion": scan_suggestion
         }
+
+        # Display results
+        st.markdown("### 🧠 Scan-Based Risk Assessment")
+        st.markdown(
+            f"<span class='risk-dot' style='background:{scan_color}'></span> **{scan_risk}**",
+            unsafe_allow_html=True
+        )
+        st.write(f"**Neuroblastoma probability:** {scan_prob_neuro * 100:.1f}%")
+        st.write(scan_suggestion)
+
+        # Reset trigger
+        st.session_state["run_scan"] = False
 
     except Exception as e:
         st.error(f"Scan analysis failed: {e}")

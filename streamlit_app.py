@@ -578,9 +578,9 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         from tensorflow.keras.applications.efficientnet import preprocess_input
         img = Image.open(uploaded_scan).convert("RGB")
         img = img.resize((224, 224))
-        img_arr = np.array(img)
+
+        img_arr = np.array(img)         
         img_arr = np.expand_dims(img_arr, axis=0)
-        img_arr = preprocess_input(img_arr)
 
         # Model prediction
         scan_probs = scan_model.predict(img_arr)[0]

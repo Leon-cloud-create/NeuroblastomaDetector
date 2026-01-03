@@ -575,7 +575,6 @@ if uploaded_scan is not None:
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
         # Load & preprocess image
-        from tensorflow.keras.applications.efficientnet import preprocess_input
         img = Image.open(uploaded_scan).convert("RGB")
         img = img.resize((224, 224))
 

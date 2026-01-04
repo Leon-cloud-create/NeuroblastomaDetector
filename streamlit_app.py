@@ -580,8 +580,12 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
 
         img_arr = np.array(img)         
         img_arr = np.expand_dims(img_arr, axis=0)
- 
+        st.write("dtype:", img_arr.dtype)
+        st.write("shape:", img_arr.shape)
+        st.write("range:", float(img_arr.min()), float(img_arr.max()))
+
         st.write("Model loaded:", scan_model)
+        
         # Model prediction
         scan_probs = scan_model.predict(img_arr)[0]
         scan_prob_neuro = float(scan_probs[1])

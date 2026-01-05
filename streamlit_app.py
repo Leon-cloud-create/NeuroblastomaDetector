@@ -588,6 +588,8 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         # Debug (keep for now)
         st.write("dtype:", img_arr.dtype)
         st.write("range:", float(img_arr.min()), float(img_arr.max()))
+        st.write("MODEL SUMMARY:")
+        scan_model.summary(print_fn=lambda x: st.text(x))
 
         scan_probs = scan_model.predict(img_arr)[0]
         st.write("RAW probs:", scan_probs)

@@ -571,8 +571,7 @@ if uploaded_scan is not None:
         if st.button(t["scan_analyze_button"], key="scan_analyze"):
             st.session_state["run_scan"] = True
             
-from tensorflow.keras.applications import EfficientNetB0
-preprocess_input = EfficientNetB0.preprocess_input
+from tensorflow.keras.applications.efficientnet import preprocess_input
 
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:

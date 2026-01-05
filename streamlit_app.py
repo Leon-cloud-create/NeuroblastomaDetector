@@ -575,38 +575,23 @@ from tensorflow.keras.applications.efficientnet import preprocess_input
 
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
-        # Load & preprocess image
         img = Image.open(uploaded_scan).convert("RGB")
         img = img.resize((224, 224))
 
-        img_arr = np.array(img)
+        img_arr = np.array(img, dtype=np.float32)
         img_arr = np.expand_dims(img_arr, axis=0)
-        img_arr = img_arr.astype("float32")
 
-        img_arr = preprocess_input(img_arr)
+        # 🔍 TEMP DEBUG
+        pred_raw = scan_model.predict(img_arr)
+        st.write("Output shape:", pred_raw.shape)
+        st.write("Raw output:", pred_raw)
 
-        # Debug (keep for now)
-        st.write("dtype:", img_arr.dtype)
-        st.write("range:", float(img_arr.min()), float(img_arr.max()))
-        st.write("MODEL SUMMARY:")
-        scan_model.summary(print_fn=lambda x: st.text(x))
-
-        scan_probs = scan_model.predict(img_arr)[0]
-        st.write("RAW probs:", scan_probs)
-
-        class_names = ["neuroblastoma", "non_neuroblastoma"]
-        pred_idx = int(np.argmax(scan_probs))
-
-        st.write(
-            f"Prediction: {class_names[pred_idx]} "
-            f"({scan_probs[pred_idx] * 100:.2f}%)"
-        )
+        scan_probs = pred_raw[0]
 
         st.session_state["run_scan"] = False
 
     except Exception as e:
         st.error(f"Scan analysis error: {e}")
-
         
         # Model prediction
         scan_probs = scan_model.predict(img_arr)[0]

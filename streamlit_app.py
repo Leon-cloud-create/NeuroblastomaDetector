@@ -576,15 +576,15 @@ from tensorflow.keras.applications.efficientnet import preprocess_input
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
         # --- Load & preprocess image ---
-        img = Image.open(uploaded_scan).convert("RGB")  # or "L" if trained on grayscale
-        img = img.resize((224, 224))
+        img = Image.open(uploaded_scan)  
+        img = img.resize((224, 224))     
         img_arr = np.array(img, dtype=np.float32)
         img_arr = np.expand_dims(img_arr, axis=0)
+        img_arr = preprocess_input(img_arr)
 
-        # 🔍 TEMP DEBUG
-        pred_raw = scan_model.predict(img_arr)
-        st.write("Output shape:", pred_raw.shape)
-        st.write("Raw output:", pred_raw)
+        st.write("Shape:", img_arr.shape)
+        st.write("Min/max:", img_arr.min(), img_arr.max())
+
 
         # --- Handle model output ---
         # Detect if sigmoid or softmax

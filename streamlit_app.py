@@ -575,9 +575,9 @@ from tensorflow.keras.applications.efficientnet import preprocess_input
 
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
     try:
-        img = Image.open(uploaded_scan).convert("RGB")
+        # --- Load & preprocess image ---
+        img = Image.open(uploaded_scan).convert("RGB")  # or "L" if trained on grayscale
         img = img.resize((224, 224))
-
         img_arr = np.array(img, dtype=np.float32)
         img_arr = np.expand_dims(img_arr, axis=0)
 
@@ -586,18 +586,14 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         st.write("Output shape:", pred_raw.shape)
         st.write("Raw output:", pred_raw)
 
-        scan_probs = pred_raw[0]
+        # --- Handle model output ---
+        # Detect if sigmoid or softmax
+        if pred_raw.shape[1] == 1:  # sigmoid
+            scan_prob_neuro = float(pred_raw[0][0])
+        else:  # softmax
+            scan_prob_neuro = float(pred_raw[0][1])
 
-        st.session_state["run_scan"] = False
-
-    except Exception as e:
-        st.error(f"Scan analysis error: {e}")
-        
-        # Model prediction
-        scan_probs = scan_model.predict(img_arr)[0]
-        scan_prob_neuro = float(scan_probs[1])
-
-        # Risk logic
+        # --- Risk logic ---
         if scan_prob_neuro <= 0.34:
             scan_risk = t["risk_low"]
             scan_color = "#2ca02c"
@@ -615,7 +611,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
             scan_color = "#d62728"
             scan_suggestion = "High imaging risk. Urgent evaluation recommended."
 
-        # Store results
+        # --- Store results ---
         st.session_state["last_scan_result"] = {
             "prob_neuro": scan_prob_neuro,
             "risk": scan_risk,
@@ -623,7 +619,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
             "suggestion": scan_suggestion
         }
 
-        # Display results
+        # --- Display results ---
         st.markdown("### 🧠 Scan-Based Risk Assessment")
         st.markdown(
             f"<span class='risk-dot' style='background:{scan_color}'></span> **{scan_risk}**",
@@ -636,7 +632,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         st.session_state["run_scan"] = False
 
     except Exception as e:
-        st.error(f"Scan analysis failed: {e}")
+        st.error(f"Scan analysis error: {e}")
 
 #----------------- Combined Result -----------------------
 st.markdown("---")

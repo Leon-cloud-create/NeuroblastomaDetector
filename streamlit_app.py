@@ -582,10 +582,6 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         img_arr = np.expand_dims(img_arr, axis=0)      # shape: (1, 224, 224, 3)
         img_arr = preprocess_input(img_arr)
 
-        # Debug
-        st.write("Shape:", img_arr.shape)
-        st.write("Min/max:", img_arr.min(), img_arr.max())
-
         # Predict
         scan_probs = scan_model.predict(img_arr)[0]
         pred_idx = int(np.argmax(scan_probs))

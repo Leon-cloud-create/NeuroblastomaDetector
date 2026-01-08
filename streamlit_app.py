@@ -570,7 +570,7 @@ if uploaded_scan is not None:
     else:
         if st.button(t["scan_analyze_button"], key="scan_analyze"):
             st.session_state["run_scan"] = True
-            
+        
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
@@ -581,7 +581,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         img_arr = np.array(img, dtype=np.float32)      # shape: (224, 224, 3)
         img_arr = np.expand_dims(img_arr, axis=0)      # shape: (1, 224, 224, 3)
         img_arr = preprocess_input(img_arr)
-        
+
         # Debug
         st.write("Shape:", img_arr.shape)
         st.write("Min/max:", img_arr.min(), img_arr.max())
@@ -590,10 +590,12 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         scan_probs = scan_model.predict(img_arr)[0]
         pred_idx = int(np.argmax(scan_probs))
 
-        st.write("Predicted class:", pred_idx, "Raw probs:", scan_probs)
+        # Correct class mapping
+        CLASS_MAP = {0: "neuroblastoma", 1: "non_neuroblastoma"}
+        prediction_text = CLASS_MAP[pred_idx]
+        scan_prob_neuro = float(scan_probs[0])  # neuroblastoma probability is index 0
 
-        # Risk logic
-        scan_prob_neuro = float(scan_probs[1])
+        # Risk logic based on neuroblastoma probability
         if scan_prob_neuro <= 0.34:
             scan_risk = t["risk_low"]
             scan_color = "#2ca02c"
@@ -616,7 +618,8 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
             "prob_neuro": scan_prob_neuro,
             "risk": scan_risk,
             "color": scan_color,
-            "suggestion": scan_suggestion
+            "suggestion": scan_suggestion,
+            "prediction_text": prediction_text
         }
 
         # Display results
@@ -625,6 +628,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
             f"<span class='risk-dot' style='background:{scan_color}'></span> **{scan_risk}**",
             unsafe_allow_html=True
         )
+        st.write(f"**Prediction:** {prediction_text}")
         st.write(f"**Neuroblastoma probability:** {scan_prob_neuro * 100:.1f}%")
         st.write(scan_suggestion)
 

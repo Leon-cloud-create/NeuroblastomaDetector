@@ -579,7 +579,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         img = Image.open(uploaded_scan).convert("RGB")  # ensures 3 channels
         img = img.resize((224, 224))
         img_arr = np.array(img, dtype=np.float32)      # shape: (224, 224, 3)
-        img_arr = np.expand_dims(img_arr, axis=0)      # shape: (1, 224, 224, 3)
+        img_arr = np.expand_dims(img_arr, axis=0)      # shape: (1, 224, , 3)
         img_arr = preprocess_input(img_arr)
 
         # Predict

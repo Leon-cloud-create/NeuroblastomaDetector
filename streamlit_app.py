@@ -15,7 +15,7 @@ except ImportError:
     load_model = None
     TENSORFLOW_AVAILABLE = False
 
-# ---------------- Config & CSS ---------------
+# ---------------- Config & CSS ----------------
 st.set_page_config(page_title="🏥 Neuroblastoma Risk Predictor", layout="wide")
 
 st.markdown(

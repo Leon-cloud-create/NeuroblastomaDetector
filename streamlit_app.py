@@ -590,10 +590,10 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         
         # Handle both sigmoid (single output) and softmax (two outputs)
         if len(scan_probs) == 1:
-            # Sigmoid output: single probability for neuroblastoma
-            scan_prob_neuro = float(scan_probs[0])
-            scan_prob_non_neuro = 1.0 - scan_prob_neuro
-            pred_idx = 1 if scan_prob_neuro > 0.5 else 0
+            # FLIPPED: Model outputs non-neuroblastoma, so invert it
+            scan_prob_non_neuro = float(scan_probs[0])
+            scan_prob_neuro = 1.0 - scan_prob_non_neuro  # Inverted!
+            pred_idx = 0 if scan_prob_neuro > 0.5 else 1  # Flipped indices
         else:
             # Softmax output: two probabilities [non_neuroblastoma, neuroblastoma]
             scan_prob_non_neuro = float(scan_probs[0])
@@ -601,7 +601,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
             pred_idx = int(np.argmax(scan_probs))
 
         # Class mapping
-        CLASS_MAP = {0: "non_neuroblastoma", 1: "neuroblastoma"}
+        CLASS_MAP = {0: "neuroblastoma", 1: "non_neuroblastoma"}
         prediction_text = CLASS_MAP[pred_idx]
 
         # Risk logic based on neuroblastoma probability

@@ -51,7 +51,7 @@ SCAN_MODEL_PATH = "neuro_model.keras"
 # ---------------- Translations (FIXED - COMPLETE) ----------------
 translations = {
     "English": {
-        "fill_patient_note": "Please fill in patient details.",
+        "fill_patient_note": "Please fill in patient details ⚠️",
         "assessment_date": "Assessment date",
         "age": "Age (years)",
         "gender": "Gender",
@@ -620,13 +620,24 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
 
         # Display results
         st.markdown("### 🧠 Scan-Based Risk Assessment")
+
         st.markdown(
-            f"<span class='risk-dot' style='background:{scan_color}'></span> **{scan_risk}**",
+            f"<span class='risk-dot' style='background:{scan_color}'></span> "
+            f"**{scan_risk}**",
             unsafe_allow_html=True
         )
-        st.write(f"**Prediction:** {prediction_text}")
-        st.write(f"**Neuroblastoma probability:** {scan_prob_neuro * 100:.1f}%")
+
+        scan_confidence = scan_prob_neuro * 100  # convert to %
+
+        st.write(f"**Neuroblastoma probability:** {scan_confidence:.1f}%")
         st.write(scan_suggestion)
+
+        # ---- Confidence bar ----
+        st.markdown("**Model confidence:**")
+        st.progress(int(scan_confidence))
+        st.write(
+        f"{scan_confidence:.2f}% confident based on imaging data."
+        )
 
         # Reset trigger
         st.session_state["run_scan"] = False
@@ -666,18 +677,21 @@ def compute_final_combined_result():
         risk = t["risk_high"]
         color = "#d62728"
 
-    st.markdown("### 🧬 Final Combined Risk Assessment")
-    st.markdown(
-        f"<span class='risk-dot' style='background:{color}'></span> **{risk}**",
-        unsafe_allow_html=True
-    )
-    st.write(f"**Combined probability:** {combined_prob * 100:.1f}%")
-    st.write(
-        "*This combined result integrates symptom-based AI prediction with scan-based analysis and is experimental.*"
-    )
+    st.markdown("### 🔗 Combined Risk Assessment")
+    
+    combined_confidence = combined_prob * 100
 
-if final_combined:
-    compute_final_combined_result()
+    st.write(f"**Combined Neuroblastoma probability:** {combined_confidence:.1f}%")
+
+    st.markdown("**Model confidence:**")
+    st.progress(int(combined_confidence))
+    st.write(
+        f"{combined_confidence:.2f}% confident based on combined AI analysis."
+)
+
+
+    if final_combined:
+        compute_final_combined_result()
 
 # ---------------- Feedback (above footer) ----------------
 st.markdown("---")

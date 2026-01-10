@@ -51,7 +51,7 @@ SCAN_MODEL_PATH = "neuro_model.keras"
 # ---------------- Translations (FIXED - COMPLETE) ----------------
 translations = {
     "English": {
-        "fill_patient_note": "Please fill in patient details first ⚠️",
+        "fill_patient_note": "Please fill in patient details ⚠️",
         "assessment_date": "Assessment date",
         "age": "Age (years)",
         "gender": "Gender",
@@ -563,13 +563,17 @@ uploaded_scan = st.file_uploader(
 )
 
 if uploaded_scan is not None:
-    st.image(uploaded_scan, caption="Uploaded scan")
+    st.image(uploaded_scan, caption="Uploaded scan", use_column_width=True)
+
     if not TENSORFLOW_AVAILABLE or scan_model is None:
         st.warning(t["scan_model_not_available"])
     else:
         if st.button(t["scan_analyze_button"], key="scan_analyze"):
             st.session_state["run_scan"] = True
         
+        img = Image.open(uploaded_scan).convert("RGB")  # ensures 3 channels
+        img = img.resize((224, 224))
+       
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
 if st.session_state.get("run_scan", False) and uploaded_scan is not None:
@@ -578,18 +582,27 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         img = Image.open(uploaded_scan).convert("RGB")  # ensures 3 channels
         img = img.resize((224, 224))
         img_arr = np.array(img, dtype=np.float32)      # shape: (224, 224, 3)
-        img_arr = np.expand_dims(img_arr, axis=0)      # shape: (1, 224, , 3)
+        img_arr = np.expand_dims(img_arr, axis=0)      # shape: (1, 224, 224, 3)
         img_arr = preprocess_input(img_arr)
 
         # Predict
         scan_probs = scan_model.predict(img_arr)[0]
-        pred_idx = int(np.argmax(scan_probs))
+        
+        # Handle both sigmoid (single output) and softmax (two outputs)
+        if len(scan_probs) == 1:
+            # FLIPPED: Model outputs non-neuroblastoma, so invert it
+            scan_prob_non_neuro = float(scan_probs[0])
+            scan_prob_neuro = 1.0 - scan_prob_non_neuro  # Inverted!
+            pred_idx = 0 if scan_prob_neuro > 0.5 else 1  # Flipped indices
+        else:
+            # Softmax output: two probabilities [non_neuroblastoma, neuroblastoma]
+            scan_prob_non_neuro = float(scan_probs[0])
+            scan_prob_neuro = float(scan_probs[1])
+            pred_idx = int(np.argmax(scan_probs))
 
-        # Correct class mapping
-        scan_prob_neuro = float(scan_model.predict(img_arr)[0][0])
-
-        scan_prediction = "YES" if scan_prob_neuro >= 0.5 else "NO"
-        scan_confidence = scan_prob_neuro * 100
+        # Class mapping
+        CLASS_MAP = {0: "neuroblastoma", 1: "non_neuroblastoma"}
+        prediction_text = CLASS_MAP[pred_idx]
 
         # Risk logic based on neuroblastoma probability
         if scan_prob_neuro <= 0.34:
@@ -621,27 +634,26 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
         # Display results
         st.markdown("### 🧠 Scan-Based Risk Assessment")
 
-        scan_prediction = "Neuroblastoma" if scan_prob_neuro >= 0.5 else "No Neuroblastoma"
-
         st.markdown(
             f"<span class='risk-dot' style='background:{scan_color}'></span> "
-            f"**Prediction:** {scan_prediction}",
+            f"**{scan_risk}**",
             unsafe_allow_html=True
         )
 
-        scan_confidence = scan_prob_neuro * 100
+        scan_confidence = scan_prob_neuro * 100  # convert to %
 
-        st.write(f"**Probability:** {scan_confidence:.1f}%")
-
-        st.markdown("**Suggestions:**")
+        st.write(f"**Neuroblastoma probability:** {scan_confidence:.1f}%")
         st.write(scan_suggestion)
 
+        # ---- Confidence bar ----
         st.markdown("**Model confidence:**")
-        st.progress(int(scan_confidence))
-        st.write(f"{scan_confidence:.2f}% confident based on imaging data.")
+        st.progress(min(int(scan_confidence), 100))
+        st.write(
+            f"{scan_confidence:.2f}% confident based on imaging data."
+        )
 
+        # Reset trigger
         st.session_state["run_scan"] = False
-
 
     except Exception as e:
         st.error(f"Scan analysis error: {e}")
@@ -649,6 +661,7 @@ if st.session_state.get("run_scan", False) and uploaded_scan is not None:
 
 #----------------- Combined Result -----------------------
 st.markdown("---")
+final_combined = st.button("🧬 Final Combined Risk")
 
 def compute_final_combined_result():
     if st.session_state.get("last_result") is None:
@@ -663,9 +676,7 @@ def compute_final_combined_result():
     scan_prob = st.session_state["last_scan_result"]["prob_neuro"]
 
     combined_prob = (neuro_prob + scan_prob) / 2.0
-    combined_confidence = combined_prob * 100
 
-    # Risk category
     if combined_prob <= 0.34:
         risk = t["risk_low"]
         color = "#2ca02c"
@@ -679,13 +690,13 @@ def compute_final_combined_result():
         risk = t["risk_high"]
         color = "#d62728"
 
-    # YES / NO
-    combined_prediction = "Neuroblastoma" if combined_prob >= 0.5 else "No Neuroblastoma"
-
     st.markdown("### 🔗 Combined Risk Assessment")
+
+    combined_confidence = combined_prob * 100
+
     st.markdown(
         f"<span class='risk-dot' style='background:{color}'></span> "
-        f"**Prediction:** {combined_prediction}",
+        f"**{risk}**",
         unsafe_allow_html=True
     )
 
@@ -697,12 +708,6 @@ def compute_final_combined_result():
         f"{combined_confidence:.2f}% confident based on combined AI analysis."
     )
 
-    st.caption(
-        "⚠️ This combined result integrates symptom-based and scan-based AI models and is experimental."
-    )
-
-# ---- BUTTON (outside function) ----
-final_combined = st.button("🧬 Final Combined Risk")
 
 if final_combined:
     compute_final_combined_result()
